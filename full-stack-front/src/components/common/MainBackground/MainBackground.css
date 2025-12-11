@@ -1,0 +1,30 @@
+.container-background {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-image: url('/background-hexa.svg');
+    background-size: 80%;
+}
+
+.content {
+    position: relative;
+    overflow: hidden;
+}
+
+.layer-filter {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-color: var(--color-green-primary);
+    opacity: 0.1;
+}
+
+.layer-img {
+    position: absolute;
+    background: black;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(circle, transparent 0%, var(--color-black-primary) 80%);
+}

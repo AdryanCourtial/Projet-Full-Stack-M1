@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+.plus-jakarta-sans-base {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
+html {
+  --color-green-base: 35, 206, 107;
+  --color-black-base: 10, 10, 10;
+  --color-white-base: 255, 255, 255;
+
+  --color-green-primary: rgba(var(--color-green-base), 1);
+  --color-black-primary: rgba(var(--color-black-base), 1);
+  --color-white-primary: rgba(var(--color-white-base), 1);
+
+  --color-white-glass-400: rgba(255, 255, 255, 0.12);
+  --color-white-glass-600: rgba(255, 255, 255, 0.18);
+  --color-white-glass-800: rgba(255, 255, 255, 0.27);
+
+
+
+  --font-family-base: 'Plus Jakarta Sans', sans-serif;
+
+  font-family: var(--font-family-base);
+  color: var(--color-white-primary);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-green-primary);
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: color-mix(in srgb, var(--color-green-primary) 70%, white);
+}
+
+
+body {
+  margin: 0;
+  background-color: var(--color-black-primary);
+  color: var(--color-white-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+  letter-spacing: .05em;
+}
+
+main {
+  max-width: 1024px;
+  width: 100%;
+  padding: 1em;
+  margin: auto;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 2em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 1.3em;
+  line-height: 1.1;
+}
+
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: var(--color-green-primary);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.bg-glass-400 {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 12px rgba(var(--color-white-base), 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.container {
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.bg-black-primary {
+  background-color: var(--color-black-primary);
+  color: var(--color-white-primary);
+}
+
+.bg-white-primary {
+  background-color: var(--color-white-primary);
+  color: var(--color-black-primary);
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.blob-background {
+  position: absolute;
+  z-index: 1;
+}

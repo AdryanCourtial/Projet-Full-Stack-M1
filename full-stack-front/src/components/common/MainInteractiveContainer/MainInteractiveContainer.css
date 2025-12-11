@@ -1,0 +1,35 @@
+.border-tag {
+    position: relative;
+    width: inherit;
+    border-radius: 20px;
+    height: auto;
+    background: var(--color-white-primary);
+    background: linear-gradient(90deg, var(--color-green-primary) 0%, var(--color-green-primary) 0%, var(--color-white-primary) 50%, var(--color-white-primary) 100%);
+    background-size: 200%;
+    animation: forwards gradient-border 2s infinite;
+}
+
+.container-tag-neon {
+    margin: 3px;
+    border-radius: inherit;
+    padding: .5em;
+}
+
+.container-tag {
+    width: 100%;
+    max-width: max-content;
+    padding: 1.5em;
+    border-radius: 8px;
+    transition: .3s;
+}
+
+.container-tag:hover {
+    border-color: rgba(var(--color-green-base), 0.1);
+    scale: 100.5%;
+}
+
+@keyframes gradient-border {
+    to {
+        background-position: 200%;
+    }
+}

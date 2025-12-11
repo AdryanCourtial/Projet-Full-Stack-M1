@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/////////////////////////////////////////////////////////
+// User Model
+/////////////////////////////////////////////////////////
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  categories   Category[]
+  transactions Transaction[]
+  budgets      Budget[]
+  groups       Group[]
+  groupMembers GroupMember[]
+  envelopes    Envelope[]
+  schedules    Schedule[]
+}
+
+/////////////////////////////////////////////////////////
+//  Gestion Model
+/////////////////////////////////////////////////////////
+
+model Category {
+  id     Int             @id @default(autoincrement())
+  userId Int
+  user   User            @relation(fields: [userId], references: [id])
+  name   String
+  type   TransactionType
+
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  transactions     Transaction[]
+  budgetCategories BudgetCategory[]
+  schedules        Schedule[]
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  groupId Int?
+
+  amount      Float
+  type        TransactionType
+  date        DateTime
+  description String?
+
+  paymentStatus Boolean @default(false)
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  budgetId Int?
+
+  envelopeId Int?
+
+  scheduleId Int?
+  schedule   Schedule? @relation(fields: [scheduleId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  budget    Budget?   @relation(fields: [budgetId], references: [id])
+  group     Group?    @relation(fields: [groupId], references: [id])
+  envelope  Envelope? @relation(fields: [envelopeId], references: [id])
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Budget {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  name          String
+  amountPlanned Float
+  startDate     DateTime
+  endDate       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions     Transaction[]
+  budgetCategories BudgetCategory[]
+  schedules        Schedule[]
+}
+
+model BudgetCategory {
+  id         Int      @id @default(autoincrement())
+  budgetId   Int
+  budget     Budget   @relation(fields: [budgetId], references: [id])
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////////////////////////////
+//  Group Models
+//////////////////////////////////////////////////////////
+
+model Group {
+  id           Int           @id @default(autoincrement())
+  name         String
+  ownerId      Int
+  owner        User          @relation(fields: [ownerId], references: [id])
+  members      GroupMember[]
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GroupMember {
+  id      Int   @id @default(autoincrement())
+  groupId Int
+  userId  Int
+  group   Group @relation(fields: [groupId], references: [id])
+  user    User  @relation(fields: [userId], references: [id])
+}
+
+//////////////////////////////////////////////////////////
+//  Envelope Models
+//////////////////////////////////////////////////////////
+
+model Envelope {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  amount    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+}
+
+//////////////////////////////////////////////////////////
+//  Schedule Indexes
+//////////////////////////////////////////////////////////
+
+model Schedule {
+  id         Int             @id @default(autoincrement())
+  userId     Int
+  user       User            @relation(fields: [userId], references: [id])
+  name       String
+  amount     Float
+  type       TransactionType
+  categoryId Int
+  category   Category        @relation(fields: [categoryId], references: [id])
+  budgetId   Int?
+  budget     Budget?         @relation(fields: [budgetId], references: [id])
+
+  frequency      ScheduleFrequency?
+  customInterval Int?               @default(1)
+
+  startDate DateTime
+  endDate   DateTime?
+  isActive  Boolean   @default(true)
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+}
+
+enum ScheduleFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}

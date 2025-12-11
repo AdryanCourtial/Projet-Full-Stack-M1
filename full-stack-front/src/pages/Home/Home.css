@@ -1,0 +1,40 @@
+.home-page {
+    z-index: 3;
+    display: flex;
+    gap: 2em;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+}
+
+.container-solde-wallet {
+    padding: 1em 0;
+    display: flex;
+    flex-direction: column;
+    gap: .3em;
+    
+    h1, p {
+        width: 100%;
+        text-align: center;
+        transition: 1s;
+    }
+    
+    h1:hover {
+        letter-spacing: .15em;
+    }
+    
+    .title {
+        color: var(--color-white-primary);
+    }
+    
+    p {
+        color: var(--color-green-primary);
+    }
+    
+}
+
+
+.comming-mouvement {
+    width: 400px;
+}
