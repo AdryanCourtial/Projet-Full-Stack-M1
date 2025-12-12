@@ -1,0 +1,12 @@
+services:
+  frontend:
+     build:
+      context: ./Frontend-React
+      dockerfile: dockerfile
+
+  backend:
+    build: 
+      context: ./Backend-Express
+      dockerfile: Dockerfile
+
+    
