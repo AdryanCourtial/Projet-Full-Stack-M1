@@ -1,12 +1,69 @@
 services:
   frontend:
-     build:
+    build:
       context: ./Frontend-React
-      dockerfile: dockerfile
+      dockerfile: Dockerfile.dev
+    container_name: frontend_app
+    volumes:
+      - ./Frontend-React:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    depends_on:
+      - backend
+    networks:
+      - full-network
 
   backend:
-    build: 
+    build:
       context: ./Backend-Express
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+    container_name: backend_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - "./Backend-Express:/app"
+    environment:
+      - PORT=5000
+      - DATABASE_URL=mysql://root:password@mysql:3306/full_stack_dev
 
-    
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - full-network
+    command: >
+      sh -c "npx prisma generate &&
+             npx prisma migrate dev &&
+             npm run dev"
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_server
+    restart: always
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: full_stack_dev
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - full-network
+  
+  redis:
+    image: redis:latest
+    container_name: redis-server
+    restart: always
+    ports:
+      - "3310:3301"
+    networks:
+      - full-network
+
+networks:
+  full-network: {}
+
+volumes:
+  mysql_data: {}

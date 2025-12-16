@@ -5,6 +5,8 @@ import Schedule from './pages/Schedule/Schedule'
 import Authentification from './components/Authentifiaction/Authentification'
 import MainBackground from './components/common/MainBackground/MainBackground'
 import Navbar from './components/common/Navbar/Navbar'
+import Register from './pages/Register/Register'
+import Login from './pages/Login/Login'
 
 function App() {
 
@@ -12,43 +14,43 @@ function App() {
     <>
         <BrowserRouter>
           <Navbar />
+          
           <Routes>
 
             <Route
               path="/login"
               element={
                 <MainBackground>
-                  <Home />
+                  <Login />
                 </MainBackground>
               }
             />
 
 
             <Route
-              path="/signin"
+              path="/register"
               element={
                 <MainBackground>
-                  <Home />
+                  <Register />
                 </MainBackground>
               }
             />
-
 
             <Route
               path="/home"
               element={
-                <MainBackground>
+                <Authentification>
                   <Home />
-                </MainBackground>
+                </Authentification>
               }
             />
 
             <Route
               path='/schedule'
               element={
-                <MainBackground>
+                <Authentification>
                   <Schedule />
-                </MainBackground>
+                </Authentification>
               }
             />
 

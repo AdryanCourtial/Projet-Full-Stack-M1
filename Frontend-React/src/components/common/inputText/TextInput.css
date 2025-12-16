@@ -1,0 +1,11 @@
+.label-input {
+    display: flex;
+    gap: .2em;
+    flex-direction: column;
+    font-weight: 600;
+}
+
+input[type="text"] {
+    font-weight: 400;
+    padding: .7em;
+}

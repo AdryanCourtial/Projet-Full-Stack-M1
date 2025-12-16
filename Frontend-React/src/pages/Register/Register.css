@@ -1,0 +1,45 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 100vh;
+}
+
+h1 {
+    width: 100%;
+    text-align: center;
+}
+
+.main-container {
+    width: 100%;
+    height: 90vw;
+    max-height: 520px;
+    display: flex;
+    flex-direction: row;
+}
+
+.global-container {
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 1em 0 0 1em;
+    padding: 1.5em;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;        /* 👈 hauteur = contenu */
+    grid-auto-flow: row;  
+    gap: .5em;
+}
+
+label[for="email"], label[for="password"], label[for="confirm-password"] {
+    grid-column: -1 / 1;
+}
+
+.side-container {
+    flex: 1;
+}

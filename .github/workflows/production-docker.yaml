@@ -1,0 +1,17 @@
+name: Mise en production de l'application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run:  docker compose -f docker-compose.yaml up --build
