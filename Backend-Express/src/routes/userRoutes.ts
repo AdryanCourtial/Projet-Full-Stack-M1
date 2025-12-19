@@ -1,104 +1,55 @@
 import { Router } from "express";
-import { createUser, getAllUsers, getUserById } from "../controllers/userController";
+import BaseRouter, { RouteConfig } from "./base.router";
+import AuthMiddleware from "../middlewares/auth.middleware";
+import UserController from "../controllers/user.controller";
 
-const router = Router();
-
-/**
- * @openapi
- * /user:
- *   get:
- *     tags:
- *       - User
- *     summary: Get All Users
- *     description: Returns  a list of all users.
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "All users retrieved successfully"
- *       500:
- *         description: Internal Server Error
- */
-router.get("/", getAllUsers);
-
-/**
- * @openapi
- * /user/{id}:
- *   get:
- *     tags:
- *       - User
- *     summary: Get User by ID
- *     description: Returns a user by their ID.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: The user ID
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "User retrieved successfully"
- *       404:
- *         description: User not found
- *       500:
- *         description: Internal Server Error
- */
-router.get('/:id', getUserById);
-
-/**
- * @openapi
- * /user:
- *   post:
- *     tags:
- *       - User
- *     summary: Create a new User
- *     description: Creates a new user with the provided information.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *               example:
- *                 message: User created successfully
- *       400:
- *         description: Bad Request
- *       500:
- *         description: Internal Server Error
- */
-router.post("/", createUser);
+class UserRouter extends BaseRouter {
+    protected routes(): RouteConfig[] {
+        return [
+            /**
+             * @openapi
+             * /user/info:
+             *   get:
+             *     tags:
+             *       - User
+             *     summary: Get user info
+             *     description: Returns the authenticated user's information.
+             *     responses:
+             *       200:
+             *         description: User info retrieved successfully
+             *         content:
+             *           application/json:
+             *             schema:
+             *               type: object
+             *               properties:
+             *                 id:
+             *                   type: number
+             *                 username:
+             *                   type: string
+             *                 email:
+             *                   type: string
+             *       401:
+             *         description: Unauthorized
+             */
+            {
+                method: "get",
+                path: "/info",
+                middlewares: [
+                    AuthMiddleware.authenticateUser
+                ],
+                handler: UserController.getUser
+            },
+            {
+                method: "get",
+                path: "/all",
+                middlewares: [
+                    AuthMiddleware.authenticateUser
+                ],
+                handler: UserController.getAllUsers
+            }
+        ];
+    }
+}
 
 
-export default router;
+export default new UserRouter().router;
