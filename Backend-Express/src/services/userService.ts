@@ -13,16 +13,3 @@ export const getByIdUserService = (id: number) => {
         where: { id }
     });
 }
-
-// Service to create a new user in the database
-export const createUserService = async (data: CreateUserInput) => {
-
-    const hashedPassword = await bcrypt.hash(data.password, 10);
-
-    return prisma.user.create({
-        data: {
-            ...data,
-            password: hashedPassword
-        }
-    });
-}
