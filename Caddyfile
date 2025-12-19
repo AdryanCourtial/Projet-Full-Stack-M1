@@ -1,0 +1,15 @@
+full-stack-bourse.fr {
+    root * /app
+    file_server
+    encode gzip zstd
+
+    try_files {path} /index.html
+    
+    log {
+        output file /app/logs/access.log {
+                roll_size 100mb
+                roll_keep 5
+                roll_keep_for 720h
+        }
+    }
+}
