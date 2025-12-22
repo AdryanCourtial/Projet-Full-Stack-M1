@@ -27,7 +27,7 @@ jobs:
 
       - name: Build frontend
         run: |
-          cd apps/frontend
+          cd Frontend-React
           npm ci
           npm run build
 
@@ -45,13 +45,6 @@ jobs:
           git rm -r --quiet --ignore-unmatch .
           mkdir -p public_build
           cp -r apps/frontend/dist/* public_build/
-
-          # (optionnel) ajoute un fichier version
-          echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ') - ${GITHUB_SHA}" > public_build/VERSION.txt
-
-          git add -A
-          git commit -m "front build: ${GITHUB_SHA}" || echo "No changes"
-          git push -f origin front-build
 
   deploy:
     needs: build_front
