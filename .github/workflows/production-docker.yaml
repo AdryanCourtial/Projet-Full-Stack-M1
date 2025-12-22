@@ -1,14 +1,63 @@
-name: Deploy to VPS (no registry)
+name: CI/CD Deploy (monorepo + PM2)
 
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  deploy:
+  build_front:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy over SSH
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build frontend
+        run: |
+          cd apps/frontend
+          npm ci
+          npm run build
+
+      # Publie uniquement le build dans une branche dédiée
+      - name: Publish build to front-build branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # On crée/checkout la branche front-build depuis l'état distant (ou vide)
+          git fetch origin front-build || true
+          git checkout -B front-build
+
+          # Nettoie tout et ne garde que le build
+          git rm -r --quiet --ignore-unmatch .
+          mkdir -p public_build
+          cp -r apps/frontend/dist/* public_build/
+
+          # (optionnel) ajoute un fichier version
+          echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ') - ${GITHUB_SHA}" > public_build/VERSION.txt
+
+          git add -A
+          git commit -m "front build: ${GITHUB_SHA}" || echo "No changes"
+          git push -f origin front-build
+
+  deploy:
+    needs: build_front
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -16,12 +65,5 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
-            cd /srv/app
-            git fetch --all
-            git reset --hard origin/main
-
-            docker compose pull || true
-            docker compose build --no-cache
-            docker compose up -d --remove-orphans
-
-            docker image prune -f
+            cd /var/www/Projet-Full-Stack-M1
+            ./deploy.sh

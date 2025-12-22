@@ -1,6 +1,6 @@
-FROM node:alpine3.23 AS build
+FROM node:22.12
 WORKDIR /app
-COPY package*.json .
+COPY package*.json ./
 RUN npm install
 COPY . .
 EXPOSE 5173
