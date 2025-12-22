@@ -44,7 +44,7 @@ jobs:
           # Nettoie tout et ne garde que le build
           git rm -r --quiet --ignore-unmatch .
           mkdir -p public_build
-          cp -r apps/frontend/dist/* public_build/
+          cp -r Frontend-React/dist/* public_build/
 
   deploy:
     needs: build_front
