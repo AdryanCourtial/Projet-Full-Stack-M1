@@ -49,6 +49,7 @@ jobs:
   deploy:
     needs: build_front
     runs-on: ubuntu-latest
+    environment: VPS Hostinger
     steps:
       - name: Deploy to server over SSH
         uses: appleboy/ssh-action@v1.0.3
