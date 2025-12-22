@@ -1,26 +1,34 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="/var/www/Projet-Full-Stack-M1"
+REPO_DIR="/var/www/Projet-Full-Stack-M1"
+FRONT_DIR="/var/www/Projet-Full-Stack-M1/Frontend-React"   # dossier séparé recommandé
+BACK_PM2_NAME="backend"           # le nom de ton process pm2
 
-cd "$APP_DIR"
-
-# 1) Mettre à jour le code
+echo "== Backend: pull main =="
+cd "$REPO_DIR"
 git fetch origin
-git reset --hard origin/main
+git checkout main
+git pull origin main
 
-# 2) Build Front
-cd Frontend-React/
+# install/build backend si besoin
+cd "$REPO_DIR/"
 npm ci
 npm run build
-cd "$APP_DIR"
 
-# 4) Build Back
-cd Backend-Express/
-npm ci
-npm run build
-cd "$APP_DIR"
+echo "== PM2 reload backend =="
+pm2 reload "$BACK_PM2_NAME" || pm2 start dist/main.js --name "$BACK_PM2_NAME"
 
-# 5) PM2 reload (ou start si première fois)
-pm2 start ecosystem.config.cjs --only app || pm2 reload ecosystem.config.cjs --only app --update-env
-pm2 save
+echo "== Front: pull front-build (build only) =="
+if [ ! -d "$FRONT_DIR/.git" ]; then
+  rm -rf "$FRONT_DIR"
+  mkdir -p "$FRONT_DIR"
+  git clone --branch front-build --single-branch "$REPO_DIR" "$FRONT_DIR" || true
+fi
+
+cd "$FRONT_DIR"
+git fetch origin front-build
+git checkout front-build
+git reset --hard origin/front-build
+
+echo "== Done =="
