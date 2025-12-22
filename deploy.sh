@@ -2,8 +2,9 @@
 set -euo pipefail
 
 REPO_DIR="/var/www/Projet-Full-Stack-M1"
-FRONT_DIR="/var/www/Projet-Full-Stack-M1/Frontend-React"   # dossier séparé recommandé
-BACK_PM2_NAME="backend"           # le nom de ton process pm2
+FRONT_DIR="/var/www/Projet-Full-Stack-M1/Frontend-React"
+BACKEND_DIR="/var/www/Projet-Full-Stack-M1/Backend-Express"
+BACK_PM2_NAME="backend-full-stack"
 
 echo "== Backend: pull main =="
 cd "$REPO_DIR"
@@ -13,10 +14,11 @@ git pull origin main
 
 # install/build backend si besoin
 cd "$REPO_DIR/"
-npm ci
-npm run build
+npm install
 
 echo "== PM2 reload backend =="
+cd "$BACKEND_DIR"
+npm install
 pm2 reload "$BACK_PM2_NAME" || pm2 start dist/main.js --name "$BACK_PM2_NAME"
 
 echo "== Front: pull front-build (build only) =="
