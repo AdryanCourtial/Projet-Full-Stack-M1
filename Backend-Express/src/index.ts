@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { setupSwagger } from './swagger';
 import express, { Request, Response } from 'express';
-
+import "reflect-metadata";
 import routes from './routes/index';
 import cookieParser from 'cookie-parser';
 

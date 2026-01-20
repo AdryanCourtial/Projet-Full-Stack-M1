@@ -2,7 +2,7 @@ services:
   frontend:
     build:
       context: ./Frontend-React
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: frontend_app
     volumes:
       - ./Frontend-React:/app
@@ -18,7 +18,7 @@ services:
   backend:
     build:
       context: ./Backend-Express
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: backend_app
     ports:
       - "5000:5000"
