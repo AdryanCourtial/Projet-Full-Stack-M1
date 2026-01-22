@@ -45,11 +45,6 @@ export class CreateTransactionDto {
     @IsOptional()
     @Type(() => Number)
     @IsInt()
-    groupId?: number | null;
-
-    @IsOptional()
-    @Type(() => Number)
-    @IsInt()
     scheduleId?: number | null;
 
     @IsOptional()
@@ -89,11 +84,6 @@ export class UpdateTransactionDto {
     @Type(() => Number)
     @IsInt()
     envelopeId?: number | null;
-
-    @IsOptional()
-    @Type(() => Number)
-    @IsInt()
-    groupId?: number | null;
 
     @IsOptional()
     @Type(() => Number)

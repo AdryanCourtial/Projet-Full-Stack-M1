@@ -59,8 +59,6 @@ model Transaction {
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  groupId Int?
-
   amount      Float
   type        TransactionType
   date        DateTime
@@ -78,11 +76,14 @@ model Transaction {
   scheduleId Int?
   schedule   Schedule? @relation(fields: [scheduleId], references: [id])
 
+  occurrenceDate DateTime?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   budget    Budget?   @relation(fields: [budgetId], references: [id])
-  group     Group?    @relation(fields: [groupId], references: [id])
   envelope  Envelope? @relation(fields: [envelopeId], references: [id])
+
+  @@unique([scheduleId, occurrenceDate])
 }
 
 enum TransactionType {
@@ -93,8 +94,10 @@ enum TransactionType {
 model Budget {
   id Int @id @default(autoincrement())
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+  groupId Int?
+  group   Group? @relation(fields: [groupId], references: [id])
 
   name          String
   amountPlanned Float
@@ -130,10 +133,10 @@ model Group {
   ownerId      Int
   owner        User          @relation(fields: [ownerId], references: [id])
   members      GroupMember[]
-  transactions Transaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  budgets   Budget[]
 }
 
 model GroupMember {

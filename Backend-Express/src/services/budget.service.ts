@@ -27,9 +27,30 @@ export const createBudgetService = async (userId: number, dto: CreateBudgetDto) 
 
     if (endDate) assertRangeValid(startDate, endDate);
 
+    // 🔒 Si budget de groupe, on valide le groupe
+    if (dto.groupId) {
+        const group = await prisma.group.findFirst({
+            where: {
+                id: dto.groupId,
+                OR: [
+                    { ownerId: userId },
+                    { members: { some: { userId } } },
+                ],
+            },
+            select: { id: true },
+        });
+
+        if (!group) {
+            const err: any = new Error("Group not found or access denied");
+            err.statusCode = 403;
+            throw err;
+        }
+    }
+
     return prisma.budget.create({
         data: {
             userId,
+            groupId: dto.groupId ?? null,
             name: dto.name.trim(),
             amountPlanned: dto.amountPlanned,
             startDate,
@@ -40,21 +61,27 @@ export const createBudgetService = async (userId: number, dto: CreateBudgetDto) 
 
 export const listBudgetsService = (userId: number) => {
     return prisma.budget.findMany({
-        where: { userId },
+        where: budgetAccessWhere(userId),
         orderBy: [{ startDate: "desc" }, { id: "desc" }],
+        include: {
+            group: { select: { id: true, name: true, ownerId: true } },
+        },
     });
 };
 
 export const getBudgetByIdService = (userId: number, id: number) => {
     return prisma.budget.findFirst({
-        where: { id, userId },
+        where: {
+            id,
+            ...budgetAccessWhere(userId),
+        },
         include: {
-            budgetCategories: {
-                include: { category: true },
-            },
+            group: { select: { id: true, name: true, ownerId: true } },
+            budgetCategories: { include: { category: true } },
         },
     });
 };
+
 
 export const updateBudgetService = async (userId: number, id: number, dto: UpdateBudgetDto) => {
     const existing = await prisma.budget.findFirst({
@@ -160,8 +187,12 @@ export const removeBudgetCategoryService = async (userId: number, budgetId: numb
 
 export const getBudgetSummaryService = async (userId: number, budgetId: number, q: BudgetSummaryQueryDto) => {
     const budget = await prisma.budget.findFirst({
-        where: { id: budgetId, userId },
+        where: {
+            id: budgetId,
+            ...budgetAccessWhere(userId),
+        },
         include: {
+            group: { select: { id: true, name: true, ownerId: true } },
             budgetCategories: { include: { category: { select: { id: true, name: true, type: true } } } },
         },
     });
@@ -174,12 +205,10 @@ export const getBudgetSummaryService = async (userId: number, budgetId: number, 
 
     const from = q.from ? new Date(q.from) : budget.startDate;
     const to = q.to ? new Date(q.to) : budget.endDate ?? new Date();
-
     assertRangeValid(from, to);
 
     const spentAgg = await prisma.transaction.aggregate({
         where: {
-            userId,
             budgetId,
             type: TransactionType.EXPENSE,
             date: { gte: from, lte: to },
@@ -187,14 +216,24 @@ export const getBudgetSummaryService = async (userId: number, budgetId: number, 
         _sum: { amount: true },
     });
 
+    const incomeAgg = await prisma.transaction.aggregate({
+        where: {
+            budgetId,
+            type: TransactionType.INCOME,
+            date: { gte: from, lte: to },
+        },
+        _sum: { amount: true },
+    });
+
     const spent = spentAgg._sum.amount ?? 0;
+    const income = incomeAgg._sum.amount ?? 0;
+
     const planned = budget.amountPlanned;
     const remaining = planned - spent;
 
     const breakdown = await prisma.transaction.groupBy({
         by: ["categoryId"],
         where: {
-            userId,
             budgetId,
             type: TransactionType.EXPENSE,
             date: { gte: from, lte: to },
@@ -206,7 +245,7 @@ export const getBudgetSummaryService = async (userId: number, budgetId: number, 
     const categoryIds = breakdown.map((b) => b.categoryId);
     const categories = categoryIds.length
         ? await prisma.category.findMany({
-            where: { userId, id: { in: categoryIds } },
+            where: { id: { in: categoryIds } },
             select: { id: true, name: true },
         })
         : [];
@@ -225,9 +264,10 @@ export const getBudgetSummaryService = async (userId: number, budgetId: number, 
             amountPlanned: budget.amountPlanned,
             startDate: budget.startDate,
             endDate: budget.endDate,
+            group: budget.group ? { id: budget.group.id, name: budget.group.name, ownerId: budget.group.ownerId } : null,
         },
         period: { from, to },
-        totals: { planned, spent, remaining },
+        totals: { planned, income, spent, remaining, net: income - spent },
         byCategory,
         attachedCategories: budget.budgetCategories.map((bc) => ({
             id: bc.category.id,
@@ -236,3 +276,19 @@ export const getBudgetSummaryService = async (userId: number, budgetId: number, 
         })),
     };
 };
+
+const budgetAccessWhere = (userId: number) => ({
+    OR: [
+        // budget perso
+        { userId, groupId: null },
+        // budget de groupe
+        {
+            group: {
+                OR: [
+                    { ownerId: userId },
+                    { members: { some: { userId } } },
+                ],
+            },
+        },
+    ],
+});

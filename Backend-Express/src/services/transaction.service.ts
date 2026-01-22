@@ -3,21 +3,95 @@ import prisma from "../prisma/client";
 import { TransactionType } from "@prisma/client";
 
 export const createTransactionService = async (userId: number, dto: CreateTransactionDto) => {
+    // 1) Category ownership + type match
     const category = await prisma.category.findFirst({
         where: { id: dto.categoryId, userId },
         select: { id: true, type: true },
     });
+
     if (!category) {
         const err: any = new Error("Category not found");
         err.statusCode = 404;
         throw err;
     }
+
     if (category.type !== dto.type) {
         const err: any = new Error("Transaction type must match category type");
         err.statusCode = 400;
         throw err;
     }
 
+    // 2) Budget check (si fourni)
+    let budgetGroupId: number | null = null;
+
+    if (dto.budgetId) {
+        const budget = await prisma.budget.findFirst({
+            where: { id: dto.budgetId },
+            select: { id: true, userId: true, groupId: true },
+        });
+
+        if (!budget) {
+            const err: any = new Error("Budget not found");
+            err.statusCode = 404;
+            throw err;
+        }
+
+        budgetGroupId = budget.groupId ?? null;
+
+        // Accès budget perso
+        if (!budgetGroupId) {
+            if (budget.userId !== userId) {
+                const err: any = new Error("Access denied to budget");
+                err.statusCode = 403;
+                throw err;
+            }
+        } else {
+            // Accès budget de groupe (membre/owner)
+            const canAccess = await prisma.group.findFirst({
+                where: {
+                    id: budgetGroupId,
+                    OR: [{ ownerId: userId }, { members: { some: { userId } } }],
+                },
+                select: { id: true },
+            });
+
+            if (!canAccess) {
+                const err: any = new Error("Access denied to group budget");
+                err.statusCode = 403;
+                throw err;
+            }
+        }
+    }
+
+    // 3) Envelope ownership check (si fourni)
+    if (dto.envelopeId) {
+        const env = await prisma.envelope.findFirst({
+            where: { id: dto.envelopeId, userId },
+            select: { id: true },
+        });
+
+        if (!env) {
+            const err: any = new Error("Envelope not found");
+            err.statusCode = 404;
+            throw err;
+        }
+    }
+
+    // 4) Schedule:
+    if ((dto as any).scheduleId) {
+        const schedule = await prisma.schedule.findFirst({
+            where: { id: (dto as any).scheduleId, userId },
+            select: { id: true },
+        });
+
+        if (!schedule) {
+            const err: any = new Error("Schedule not found");
+            err.statusCode = 404;
+            throw err;
+        }
+    }
+
+    // 5) Création
     return prisma.transaction.create({
         data: {
             userId,
@@ -29,12 +103,10 @@ export const createTransactionService = async (userId: number, dto: CreateTransa
 
             budgetId: dto.budgetId ?? null,
             envelopeId: dto.envelopeId ?? null,
-            groupId: dto.groupId ?? null,
-            scheduleId: dto.scheduleId ?? null,
 
             paymentStatus: dto.paymentStatus ?? false,
         },
-        include: { category: true },
+        include: { category: true, budget: true },
     });
 };
 
@@ -120,7 +192,6 @@ export const updateTransactionService = async (userId: number, id: number, dto: 
 
             ...(dto.budgetId !== undefined ? { budgetId: dto.budgetId } : {}),
             ...(dto.envelopeId !== undefined ? { envelopeId: dto.envelopeId } : {}),
-            ...(dto.groupId !== undefined ? { groupId: dto.groupId } : {}),
             ...(dto.scheduleId !== undefined ? { scheduleId: dto.scheduleId } : {}),
             ...(dto.paymentStatus !== undefined ? { paymentStatus: dto.paymentStatus } : {}),
         },

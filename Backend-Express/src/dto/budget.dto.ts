@@ -27,6 +27,11 @@ export class CreateBudgetDto {
     @IsOptional()
     @IsDateString()
     endDate?: string;
+
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    groupId?: number;
 }
 
 export class UpdateBudgetDto {
