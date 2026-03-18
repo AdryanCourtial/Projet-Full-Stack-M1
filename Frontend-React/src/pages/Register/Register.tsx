@@ -35,7 +35,7 @@ function Register() {
               label='Prénom' 
               placeholder='Entrer un prénom'
               value={form.firstName}
-              onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+              onChange={(value) => setForm({ ...form, firstName: value as string })}
             />
 
             <TextInput
@@ -43,7 +43,7 @@ function Register() {
               label='Nom de famille' 
               placeholder='Entrer un nom de famille'
               value={form.lastName}
-              onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+              onChange={(value) => setForm({ ...form, lastName: value as string })}
             />
 
             <TextInput
@@ -51,7 +51,7 @@ function Register() {
               label='Email' 
               placeholder='Entrer une adresse email'
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={(value) => setForm({ ...form, email: value as string })}
             />
 
             <TextInput
@@ -60,7 +60,7 @@ function Register() {
               password
               placeholder='Entrer un mot de passe sécurisé'
               value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              onChange={(value) => setForm({ ...form, password: value as string })}
             />
 
             <TextInput
@@ -69,7 +69,7 @@ function Register() {
               password
               placeholder='Confirmer votre mot de passe sécurisé'
               value={form.password_confirmation}
-              onChange={(e) => setForm({ ...form, password_confirmation: e.target.value })}
+              onChange={(value) => setForm({ ...form, password_confirmation: value as string })}
             />
           </form>
 

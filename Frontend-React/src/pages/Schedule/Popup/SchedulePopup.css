@@ -24,3 +24,10 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.add-schedule {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr;
+    gap: .5em;
+}

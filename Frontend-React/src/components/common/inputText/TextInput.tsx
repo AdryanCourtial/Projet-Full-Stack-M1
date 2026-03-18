@@ -11,13 +11,22 @@ interface Props {
     value: string | number,
     password?: boolean,
     type?: "number" | "text"
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+    onChange: (e: string | number) => void
 }
 
 const TextInput: React.FC<Props> = ({ id, placeholder, label, className, value, onChange, password, type }) => {
 
+    const convertInt = (e: string | number) => {
+        if (e === "") return 0
+    }
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        onChange(e);
+        
+        if (type === "number") {
+            convertInt(value)
+        }
+
+        onChange(e.target.value);
     }
     
     return (

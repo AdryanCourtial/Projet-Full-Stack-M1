@@ -28,7 +28,7 @@ function Login() {
               label='Email' 
               placeholder='Entrer une adresse email'
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={(value) => setForm({ ...form, email: value as string })}
             />
 
             <TextInput
@@ -37,7 +37,7 @@ function Login() {
               placeholder='Entrer un mot de passe'
               value={form.password}
               password
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              onChange={(value) => setForm({ ...form, password: value as string })}
             />
 
             <button className='display-none' type="submit"></button>

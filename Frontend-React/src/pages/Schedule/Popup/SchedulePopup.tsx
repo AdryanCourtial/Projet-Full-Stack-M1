@@ -2,6 +2,8 @@ import { useState } from 'react'
 import './SchedulePopup.css'
 import { ScheduleFrequency, type PostScheduleDto } from '../../../interfaces/dto/schedules'
 import TextInput from '../../../components/common/inputText/TextInput'
+import DateInput from '../../../components/common/inputDate/DateInput'
+import SelecteurInput from '../../../components/common/inputSelecteur/SelecteurInput'
 
 const SchedulePopup = () => {
 
@@ -39,65 +41,69 @@ const SchedulePopup = () => {
         {
             page === "add" ? (
                 <div className='add-schedule'>
-                    <form action="">
                         <TextInput
                             id='name' 
                             label='Nom' 
                             placeholder='Entrer un label'
                             value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            onChange={(value) => setForm({ ...form, name: value as string })}
                         />
 
                         <TextInput
                             id='amont' 
                             label='Montant'
                             placeholder='Entrer un montant'
+                            type='number'
                             value={form.amount}
-                            onChange={(e) => setForm({ ...form, amount: parseInt(e.target.value) })}
+                            onChange={(value) => setForm({ ...form, amount: value as number })}
                         />
 
-                        <TextInput
-                            id='name' 
-                            label='Nom' 
-                            placeholder='Entrer un label'
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        <SelecteurInput
+                            id='frequency' 
+                            label='Fréquence de prélevement'
+                            onChange={(value) => setForm({ ...form, frequency: value as ScheduleFrequency})}
+                        >
+                            <option value=""> Selectionner une valeur </option>
+                            {Object.values(ScheduleFrequency).map((freq) => (
+                                <option value={freq}> {freq} </option>
+                            ))}
+                        </SelecteurInput>
+
+                        <DateInput
+                            id='start' 
+                            label='Début'
+                            placeholder='Entrer une date'
+                            value={form.startDate}
+                            onChange={(e) => setForm({ ...form, startDate: e.target.value })}
                         />
 
-                        <TextInput
-                            id='name' 
-                            label='Nom' 
-                            placeholder='Entrer un label'
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        <DateInput
+                            id='end' 
+                            label='Fin' 
+                            placeholder='Entrer une date'
+                            value={form.endDate ?? ""}
+                            onChange={(e) => setForm({ ...form, endDate: e.target.value })}
                         />
 
-                        <TextInput
-                            id='name' 
-                            label='Nom' 
-                            placeholder='Entrer un label'
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        />
+                        <SelecteurInput
+                            id='category'
+                            label='Catégorie' 
+                            onChange={(value) => setForm({ ...form, categoryId: parseInt(value) })}
+                        >
+                            <option value=""> Selectionner une valeur </option>
+                            <option></option>
+                        </SelecteurInput>
 
-                        <TextInput
-                            id='name' 
-                            label='Nom' 
-                            placeholder='Entrer un label'
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        />
+                        <SelecteurInput
+                            id='budget' 
+                            label='Budget' 
+                            onChange={(value) => setForm({ ...form, budgetId: parseInt(value) })}
+                        >
+                            <option value=""> Selectionner une valeur </option>
+                        </SelecteurInput>
 
-                        <TextInput
-                            id='name' 
-                            label='Nom' 
-                            placeholder='Entrer un label'
-                            value={form.name}
-                            onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        />
+                        <button onClick={sendForm}> Créer </button>
 
-
-                    </form>
                 </div>
             ) : (
                 <div className='show-schedule'>
