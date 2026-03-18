@@ -3,9 +3,8 @@
     display: flex;
     gap: 2em;
     flex-direction: column;
-    align-items: center;
+    justify-content: start;
     position: relative;
-
 }
 
 .container-solde-wallet {

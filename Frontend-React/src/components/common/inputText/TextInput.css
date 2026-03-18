@@ -5,7 +5,7 @@
     font-weight: 600;
 }
 
-input[type="text"] {
+input[type="text"], input[type="password"] {
     font-weight: 400;
     padding: .7em;
 }

@@ -89,7 +89,7 @@ button {
   transition: border-color 0.25s;
 }
 
-input[type='text'] {
+input[type='text'], input[type='password'] {
   all: unset;
 
   background-color: transparent;

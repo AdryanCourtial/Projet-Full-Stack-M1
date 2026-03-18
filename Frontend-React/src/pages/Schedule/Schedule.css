@@ -1,0 +1,26 @@
+.schedule-container {
+    display: flex;
+    gap: 2em;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 .5em;
+}
+
+table tr {
+    text-align: left;
+    border-bottom: 1px solid var(--color-gray-primary);
+    padding: 50px;
+}
+
+table tr:hover {
+    background-color: rgba(var(--color-green-base), 0.1);
+    scale: 100.5%;
+}

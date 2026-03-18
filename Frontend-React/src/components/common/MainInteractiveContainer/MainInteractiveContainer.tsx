@@ -3,15 +3,16 @@ import './MainInteractiveContainer.css'
 
 interface Props {
     children: React.ReactNode
+    style?: React.CSSProperties
     borderNeon?: boolean | undefined
 }
 
-const MainInteractiveContainer: React.FC<Props> = ({ children, borderNeon }) => {
+const MainInteractiveContainer: React.FC<Props> = ({ children, borderNeon, style }) => {
 
     if (borderNeon){
         return (
             <div className='border-tag'>
-                <div className='container-tag-neon'>
+                <div className='container-tag-neon' style={style}>
                     {children}
                 </div>
             </div>
@@ -19,7 +20,7 @@ const MainInteractiveContainer: React.FC<Props> = ({ children, borderNeon }) => 
     }
 
     return (
-        <div className='container-tag bg-glass-400'>
+        <div className='container-tag bg-glass-400' style={style}>
             {children}
         </div>
     )

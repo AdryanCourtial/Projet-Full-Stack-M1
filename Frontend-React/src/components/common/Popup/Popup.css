@@ -1,0 +1,6 @@
+.popup-container {
+    background-color: var(--color-white-primary);
+    color: var(--color-black-primary);
+    padding: 1em;
+    border-radius: 0.4em;
+}

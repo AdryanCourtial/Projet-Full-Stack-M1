@@ -11,7 +11,7 @@ class AuthController {
             const user = await validateUserCredentials(email, password);
 
             if (!user) {
-                return Send.error(res, null, "Invalid credentials");
+                return Send.error(res, null, "Invalid email or password.");
             }
 
             const accessToken = generateAccessToken(user.id);
@@ -33,8 +33,6 @@ class AuthController {
                 sameSite: "strict",
             });    
 
-            console.log("")
-            
             return Send.success(res, {
                 id: user.id,
                 username: user.username,
@@ -42,7 +40,6 @@ class AuthController {
             });
 
         } catch (error) {
-            console.error("Login Failed:", error);
             return Send.error(res, null, "Login failed.");
         }
     };

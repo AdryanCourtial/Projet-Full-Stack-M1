@@ -36,10 +36,31 @@ form {
     gap: .5em;
 }
 
-label[for="email"], label[for="password"], label[for="confirm-password"] {
+label[for="email"], label[for="password"], label[for="password_confirmation"] {
     grid-column: -1 / 1;
 }
 
 .side-container {
     flex: 1;
+}
+
+@media (max-width: 768px) {
+    .side-container {
+        display: none;
+    }
+
+    .main-container {
+        width: 100%;
+        max-width: 520px;
+        height: 90vw;
+        max-height: 520px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .global-container {
+        width: 100%;
+        height: 100%;
+        border-radius: 1em;
+    }
 }

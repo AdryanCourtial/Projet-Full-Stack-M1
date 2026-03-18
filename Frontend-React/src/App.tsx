@@ -1,79 +1,70 @@
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { Route, Routes } from 'react-router'
 import './App.css'
 import Home from './pages/Home/Home'
 import Schedule from './pages/Schedule/Schedule'
-import Authentification from './components/Authentifiaction/Authentification'
 import MainBackground from './components/common/MainBackground/MainBackground'
 import Navbar from './components/common/Navbar/Navbar'
 import Register from './pages/Register/Register'
 import Login from './pages/Login/Login'
+import { ToastContainer } from 'react-toastify'
+import Authentificated from './layout/Authentificated'
 
 function App() {
 
   return (
     <>
-        <BrowserRouter>
-          <Navbar />
-          
-          <Routes>
+      <ToastContainer aria-label={'toast container'} />
+      <MainBackground>
+        <Routes>
 
-            <Route
-              path="/login"
-              element={
-                <MainBackground>
-                  <Login />
-                </MainBackground>
-              }
-            />
+          <Route
+            path="/login"
+            element={
+              <MainBackground>
+                <Login />
+              </MainBackground>
+            }
+          />
 
+          <Route
+            path="/register"
+            element={
+              <MainBackground>
+                <Register />
+              </MainBackground>
+            }
+          />
 
-            <Route
-              path="/register"
-              element={
-                <MainBackground>
-                  <Register />
-                </MainBackground>
-              }
-            />
+          <Route path='/' element={
+            <>
+              <Authentificated />
+              <Navbar />
+            </>
+            }>
 
             <Route
               path="/home"
-              element={
-                <Authentification>
-                  <Home />
-                </Authentification>
-              }
-            />
-
-            <Route
-              path='/schedule'
-              element={
-                <Authentification>
-                  <Schedule />
-                </Authentification>
-              }
-            />
-
-            <Route
-              path='/groupe'
-              element={
-                <Authentification>
-                  <Schedule />
-                </Authentification>
-              }
+              element={<Home />}
             />
 
             <Route
               path='/settings'
-              element={
-                <Authentification>
-                  <Schedule />
-                </Authentification>
-              }
+              element={<Schedule />}
             />
-            
-          </Routes>
-        </BrowserRouter>
+
+            <Route
+              path='/schedule'
+              element={<Schedule />}
+            />
+
+            <Route
+              path='/groupe'
+              element={<Schedule />}
+            />
+          </Route>
+          
+        </Routes>
+      </MainBackground>
     </>
   )
 }

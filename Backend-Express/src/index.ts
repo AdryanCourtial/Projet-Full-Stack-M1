@@ -4,6 +4,8 @@ import express, { Request, Response } from 'express';
 import "reflect-metadata";
 import routes from './routes/index';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import { corsConfig } from './config/cors.config';
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors(corsConfig));
 
 setupSwagger(app);
 

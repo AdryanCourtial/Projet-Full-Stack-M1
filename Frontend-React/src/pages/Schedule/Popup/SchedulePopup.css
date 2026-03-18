@@ -1,0 +1,26 @@
+.schedule-popup-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100vw;
+    max-width: 600px;
+    min-height: 200px;
+}
+
+.show-schedule {
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.show-schedule > button {
+    font-size: 0.8em;
+    padding: 0.5em;
+}
+
+.header-show-schedule {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

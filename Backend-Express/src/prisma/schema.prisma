@@ -41,13 +41,13 @@ model User {
 
 model Category {
   id     Int             @id @default(autoincrement())
-  userId Int
-  user   User            @relation(fields: [userId], references: [id])
+  userId Int?
+  user   User?            @relation(fields: [userId], references: [id])
   name   String
   type   TransactionType
 
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  createdAt        DateTime?         @default(now())
+  updatedAt        DateTime?         @updatedAt
   transactions     Transaction[]
   budgetCategories BudgetCategory[]
   schedules        Schedule[]
