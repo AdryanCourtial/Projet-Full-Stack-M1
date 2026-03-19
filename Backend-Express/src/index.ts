@@ -6,6 +6,7 @@ import routes from './routes/index';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { corsConfig } from './config/cors.config';
+import { startScheduleCronJob } from './jobs/schedule.cron';
 
 dotenv.config();
 
@@ -20,6 +21,8 @@ app.use(cors(corsConfig));
 setupSwagger(app);
 
 app.use("/", routes);
+
+startScheduleCronJob();
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

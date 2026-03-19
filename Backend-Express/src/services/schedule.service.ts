@@ -51,6 +51,95 @@ const nextOccurrenceUTC = (current: Date, frequency: ScheduleFrequency, interval
     }
 };
 
+const monthBoundsUTC = (reference: Date) => {
+    const y = reference.getUTCFullYear();
+    const m = reference.getUTCMonth();
+
+    const from = new Date(Date.UTC(y, m, 1, 0, 0, 0, 0));
+    const to = new Date(Date.UTC(y, m, daysInMonthUTC(y, m), 0, 0, 0, 0));
+
+    return { from, to };
+};
+
+type RunnableSchedule = {
+    id: number;
+    userId: number;
+    name: string;
+    amount: number;
+    type: TransactionType;
+    categoryId: number;
+    budgetId: number | null;
+    frequency: ScheduleFrequency | null;
+    customInterval: number | null;
+    startDate: Date;
+    endDate: Date | null;
+    isActive: boolean;
+};
+
+const executeScheduleUntil = async (schedule: RunnableSchedule, toDate: Date) => {
+    const to = toUTCDateOnly(toDate);
+    const start = toUTCDateOnly(schedule.startDate);
+    const end = schedule.endDate ? toUTCDateOnly(schedule.endDate) : null;
+
+    const effectiveTo = end ? (to < end ? to : end) : to;
+    assertRangeValid(start, effectiveTo);
+
+    const freq = schedule.frequency ?? ScheduleFrequency.MONTHLY;
+    const interval = schedule.customInterval ?? 1;
+
+    const last = await prisma.transaction.findFirst({
+        where: { userId: schedule.userId, scheduleId: schedule.id, occurrenceDate: { not: null } },
+        orderBy: { occurrenceDate: "desc" },
+        select: { occurrenceDate: true },
+    });
+
+    let current = last?.occurrenceDate
+        ? nextOccurrenceUTC(toUTCDateOnly(last.occurrenceDate), freq, interval)
+        : start;
+
+    const createdIds: number[] = [];
+    let attempted = 0;
+
+    while (current <= effectiveTo) {
+        attempted++;
+
+        try {
+            const tx = await prisma.transaction.create({
+                data: {
+                    userId: schedule.userId,
+                    amount: schedule.amount,
+                    type: schedule.type,
+                    date: current,
+                    occurrenceDate: current,
+                    description: schedule.name,
+                    categoryId: schedule.categoryId,
+                    budgetId: schedule.budgetId,
+                    scheduleId: schedule.id,
+                    paymentStatus: false,
+                },
+                select: { id: true },
+            });
+
+            createdIds.push(tx.id);
+        } catch (e: any) {
+            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+            } else {
+                throw e;
+            }
+        }
+
+        current = nextOccurrenceUTC(current, freq, interval);
+    }
+
+    return {
+        scheduleId: schedule.id,
+        attempted,
+        created: createdIds.length,
+        createdIds,
+        to: effectiveTo,
+    };
+};
+
 export const createScheduleService = async (userId: number, dto: CreateScheduleDto) => {
     const startDate = toUTCDateOnly(new Date(dto.startDate));
     const endDate = dto.endDate ? toUTCDateOnly(new Date(dto.endDate)) : null;
@@ -197,7 +286,20 @@ export const deleteScheduleService = async (userId: number, id: number) => {
 export const runScheduleService = async (userId: number, scheduleId: number, q: RunScheduleQueryDto) => {
     const schedule = await prisma.schedule.findFirst({
         where: { id: scheduleId, userId },
-        include: { category: true },
+        select: {
+            id: true,
+            userId: true,
+            name: true,
+            amount: true,
+            type: true,
+            categoryId: true,
+            budgetId: true,
+            frequency: true,
+            customInterval: true,
+            startDate: true,
+            endDate: true,
+            isActive: true,
+        },
     });
     if (!schedule) {
         const err: any = new Error("Schedule not found");
@@ -211,64 +313,57 @@ export const runScheduleService = async (userId: number, scheduleId: number, q: 
     }
 
     const to = q.to ? toUTCDateOnly(new Date(q.to)) : toUTCDateOnly(new Date());
-    const start = toUTCDateOnly(schedule.startDate);
-    const end = schedule.endDate ? toUTCDateOnly(schedule.endDate) : null;
+    return executeScheduleUntil(schedule, to);
+};
 
-    const effectiveTo = end ? (to < end ? to : end) : to;
-    assertRangeValid(start, effectiveTo);
+export const runSchedulesForCurrentMonthService = async (referenceDate: Date = new Date()) => {
+    const month = monthBoundsUTC(referenceDate);
 
-    const freq = schedule.frequency ?? ScheduleFrequency.MONTHLY;
-    const interval = schedule.customInterval ?? 1;
-
-    const last = await prisma.transaction.findFirst({
-        where: { userId, scheduleId, occurrenceDate: { not: null } },
-        orderBy: { occurrenceDate: "desc" },
-        select: { occurrenceDate: true },
+    const schedules = await prisma.schedule.findMany({
+        where: {
+            isActive: true,
+            startDate: { lte: month.to },
+            OR: [{ endDate: null }, { endDate: { gte: month.from } }],
+        },
+        select: {
+            id: true,
+            userId: true,
+            name: true,
+            amount: true,
+            type: true,
+            categoryId: true,
+            budgetId: true,
+            frequency: true,
+            customInterval: true,
+            startDate: true,
+            endDate: true,
+            isActive: true,
+        },
+        orderBy: [{ userId: "asc" }, { id: "asc" }],
     });
 
-    let current = last?.occurrenceDate
-        ? nextOccurrenceUTC(toUTCDateOnly(last.occurrenceDate), freq, interval)
-        : start;
+    const results: Array<{
+        scheduleId: number;
+        attempted: number;
+        created: number;
+        createdIds: number[];
+        to: Date;
+    }> = [];
 
-    const createdIds: number[] = [];
-    let attempted = 0;
-
-    while (current <= effectiveTo) {
-        attempted++;
-
-        try {
-            const tx = await prisma.transaction.create({
-                data: {
-                    userId,
-                    amount: schedule.amount,
-                    type: schedule.type as TransactionType,
-                    date: current, 
-                    occurrenceDate: current,
-                    description: schedule.name,
-                    categoryId: schedule.categoryId,
-                    budgetId: schedule.budgetId ?? null,
-                    scheduleId: schedule.id,
-                    paymentStatus: false,
-                },
-                select: { id: true },
-            });
-
-            createdIds.push(tx.id);
-        } catch (e: any) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
-            } else {
-                throw e;
-            }
-        }
-
-        current = nextOccurrenceUTC(current, freq, interval);
+    for (const schedule of schedules) {
+        const result = await executeScheduleUntil(schedule, month.to);
+        results.push(result);
     }
 
+    const attempted = results.reduce((acc, cur) => acc + cur.attempted, 0);
+    const created = results.reduce((acc, cur) => acc + cur.created, 0);
+
     return {
-        scheduleId: schedule.id,
+        monthStart: month.from,
+        monthEnd: month.to,
+        totalSchedules: schedules.length,
         attempted,
-        created: createdIds.length,
-        createdIds,
-        to: effectiveTo,
+        created,
+        results,
     };
 };
