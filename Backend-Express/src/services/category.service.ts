@@ -18,7 +18,7 @@ export const createCategoryService = (userId: number, data: CreateCategoryInput)
     });
 };
 
-export const getAllCategoriesService = (userId: number, type?: TransactionType) => {
+export const getAllCategoriesService = (userId?: number, type?: TransactionType) => {
     return prisma.category.findMany({
         where: {
             userId,

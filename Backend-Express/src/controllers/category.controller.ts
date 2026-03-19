@@ -31,7 +31,7 @@ class CategoryController {
 
     static list = async (req: Request, res: Response) => {
         try {
-            const userId = (req as any).userId as number;
+            const userId = (req as any).userId as number ?? undefined;
 
             const { type } = req.query;
             let parsedType: TransactionType | undefined = undefined;
