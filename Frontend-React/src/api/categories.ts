@@ -1,10 +1,10 @@
-import axiosClient from "../config/axios"
+// import axiosClient from "../config/axios"
 
-export default function CategoriesRequest() {
+// export default function CategoriesRequest() {
 
-    const getCategories = async () => {
+//     const getCategories = async () => {
 
         
-        const response = await axiosClient.get("categories")
-    }
-}
+//         const response = await axiosClient.get("categories")
+//     }
+// }
