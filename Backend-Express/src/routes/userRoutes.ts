@@ -8,28 +8,42 @@ class UserRouter extends BaseRouter {
         return [
             /**
              * @openapi
+             * components:
+             *   securitySchemes:
+             *     bearerAuth:
+             *       type: http
+             *       scheme: bearer
+             *       bearerFormat: JWT
+             *   schemas:
+             *     User:
+             *       type: object
+             *       properties:
+             *         id:
+             *           type: number
+             *         username:
+             *           type: string
+             *         email:
+             *           type: string
              * /user/info:
              *   get:
+             *     security:
+             *       - bearerAuth: []
              *     tags:
              *       - User
-             *     summary: Get user info
-             *     description: Returns the authenticated user's information.
+             *     summary: Recuperer le profil de l'utilisateur connecte
+             *     description: Lit l'utilisateur depuis le userId du token et renvoie l'objet dans la cle user.
              *     responses:
              *       200:
-             *         description: User info retrieved successfully
+             *         description: Informations utilisateur recuperees
              *         content:
              *           application/json:
              *             schema:
              *               type: object
              *               properties:
-             *                 id:
-             *                   type: number
-             *                 username:
-             *                   type: string
-             *                 email:
-             *                   type: string
+             *                 user:
+             *                   $ref: '#/components/schemas/User'
              *       401:
-             *         description: Unauthorized
+             *         description: Non authentifie
              */
             {
                 method: "get",
@@ -39,6 +53,22 @@ class UserRouter extends BaseRouter {
                 ],
                 handler: UserController.getUser
             },
+            /**
+             * @openapi
+             * /user/all:
+             *   get:
+             *     security:
+             *       - bearerAuth: []
+             *     tags:
+             *       - User
+             *     summary: Lister les utilisateurs
+             *     description: Renvoie tous les utilisateurs dans la cle users.
+             *     responses:
+             *       200:
+             *         description: Liste de tous les utilisateurs
+             *       401:
+             *         description: Non authentifie
+             */
             {
                 method: "get",
                 path: "/all",
