@@ -54,21 +54,57 @@ class TransactionRouter extends BaseRouter {
              *       - bearerAuth: []
              *     tags:
              *       - Transaction
-             *     summary: Lister les transactions de l'utilisateur
-             *     description: Retourne les transactions avec filtres optionnels valides par ListTransactionsQueryDto.
+             *     summary: Lister les transactions avec filtres optionnels
+             *     description: Retourne les transactions paginées avec filtres par date (from/to), type, categories, budgets, enveloppes, groupes et planifications.
              *     parameters:
+             *       - in: query
+             *         name: from
+             *         schema:
+             *           type: string
+             *           format: date-time
+             *         description: Date de debut (format ISO)
+             *       - in: query
+             *         name: to
+             *         schema:
+             *           type: string
+             *           format: date-time
+             *         description: Date de fin (format ISO)
+             *       - in: query
+             *         name: type
+             *         schema:
+             *           type: string
+             *           enum: [INCOME, EXPENSE]
              *       - in: query
              *         name: categoryId
              *         schema:
              *           type: integer
              *       - in: query
-             *         name: startDate
+             *         name: budgetId
              *         schema:
-             *           type: string
+             *           type: integer
              *       - in: query
-             *         name: endDate
+             *         name: envelopeId
              *         schema:
-             *           type: string
+             *           type: integer
+             *       - in: query
+             *         name: groupId
+             *         schema:
+             *           type: integer
+             *       - in: query
+             *         name: scheduleId
+             *         schema:
+             *           type: integer
+             *       - in: query
+             *         name: page
+             *         schema:
+             *           type: integer
+             *           default: 1
+             *       - in: query
+             *         name: pageSize
+             *         schema:
+             *           type: integer
+             *           default: 20
+             *           maximum: 200
              *     responses:
              *       200:
              *         description: Liste des transactions
