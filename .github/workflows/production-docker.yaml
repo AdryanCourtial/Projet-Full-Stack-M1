@@ -66,4 +66,7 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            pm2 restart ecosystem.config.js --update-env || pm2 start ecosystem.config.js
+            
+            pm2 describe backend-api > /dev/null 2>&1 \
+            && pm2 restart ecosystem.config.js --update-env \
+            || pm2 start ecosystem.config.js
