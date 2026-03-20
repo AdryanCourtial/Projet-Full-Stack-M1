@@ -3,8 +3,7 @@ module.exports = {
     {
       name: "backend-api",
 
-      // Chemin vers ton point d'entrée
-      script: "./dist/index.js", // ou app.js / server.js selon ton projet
+      script: "npm run dev",
 
       // Mode cluster (recommandé en prod)
       exec_mode: "cluster",
@@ -15,8 +14,13 @@ module.exports = {
       watch: false,
 
       env: {
-        NODE_ENV: "development",
-        PORT: 3000
+        APP_HOST: process.env.APP_HOST,
+        PORT: process.env.PORT,
+        DATABASE_URL: process.env.APPDATABASE_URL_HOST,
+        AUTH_SECRET: process.env.AUTH_SECRET,
+        AUTH_SECRET_EXPIRES_IN: process.env.AUTH_SECRET_EXPIRES_IN,
+        AUTH_REFRESH_SECRET: process.env.AUTH_REFRESH_SECRET,
+        AUTH_REFRESH_SECRET_EXPIRES_IN: process.env.AUTH_REFRESH_SECRET_EXPIRES_IN
       },
 
       env_production: {
