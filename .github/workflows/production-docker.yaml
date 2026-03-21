@@ -24,14 +24,6 @@ jobs:
           cache-dependency-path: |
             Frontend-React/package-lock.json
 
-      - name: Debug secret
-        run: |
-          if [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
-            echo "❌ SSH KEY IS EMPTY"
-          else
-            echo "✅ SSH KEY EXISTS"
-          fi
-
       - name: Install frontend deps
         working-directory: Frontend-React
         run: npm ci
@@ -40,8 +32,18 @@ jobs:
         working-directory: Frontend-React
         run: npm run build
 
+      - name: Debug secret
+        run: |
+          if [ -z "${{ secrets.VITE_BACKEND_URL }}" ]; then
+            echo "❌ SSH KEY IS EMPTY"
+          else
+            echo "✅ SEc KEY EXISTS, {{ secrets.VITE_BACKEND_URL }}"
+          fi
+
       - name: Copy frontend build to VPS
         uses: appleboy/scp-action@v0.1.7
+        env:
+          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -66,7 +68,7 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            
+
             pm2 describe backend-api > /dev/null 2>&1 \
             && pm2 restart ecosystem.config.js --update-env \
             || pm2 start ecosystem.config.js
