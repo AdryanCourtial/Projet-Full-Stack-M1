@@ -34,16 +34,16 @@ jobs:
 
       - name: Debug secret
         run: |
-          if [ -z "${{ secrets.VITE_BACKEND_URL }}" ]; then
+          if [ -z "${{ env.VITE_BACKEND_URL }}" ]; then
             echo "❌ SSH KEY IS EMPTY"
           else
-            echo "✅ SEc KEY EXISTS, {{ secrets.VITE_BACKEND_URL }}"
+            echo "✅ SEc KEY EXISTS, {{ env.VITE_BACKEND_URL }}"
           fi
 
       - name: Copy frontend build to VPS
         uses: appleboy/scp-action@v0.1.7
         env:
-          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+          VITE_BACKEND_URL: ${{ env.VITE_BACKEND_URL }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
