@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "backend-api",
 
-      script: "npm run dev",
+      script: "./dist/index.js",
 
       // Mode cluster (recommandé en prod)
       exec_mode: "cluster",
