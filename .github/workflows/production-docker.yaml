@@ -30,7 +30,7 @@ jobs:
 
       - name: Build frontend
         env:
-         VITE_BACKEND_URL: "http://localhost:5000/api/"
+         VITE_BACKEND_URL: "https://full-stack-bourse.fr/api/"
         working-directory: Frontend-React
         run: npm run build
 
