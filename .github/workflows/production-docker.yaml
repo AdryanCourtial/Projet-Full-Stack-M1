@@ -32,18 +32,10 @@ jobs:
         working-directory: Frontend-React
         run: npm run build
 
-      - name: Debug secret
-        run: |
-          if [ -z "${{ env.VITE_BACKEND_URL }}" ]; then
-            echo "❌ SSH KEY IS EMPTY"
-          else
-            echo "✅ SEc KEY EXISTS, {{ env.VITE_BACKEND_URL }}"
-          fi
-
       - name: Copy frontend build to VPS
         uses: appleboy/scp-action@v0.1.7
         env:
-          VITE_BACKEND_URL: ${{ env.VITE_BACKEND_URL }}
+          VITE_BACKEND_URL: "http://localhost:5000/api/"
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
