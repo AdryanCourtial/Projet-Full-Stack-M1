@@ -29,13 +29,13 @@ jobs:
         run: npm ci
 
       - name: Build frontend
+        env:
+         VITE_BACKEND_URL: "http://localhost:5000/api/"
         working-directory: Frontend-React
         run: npm run build
 
       - name: Copy frontend build to VPS
         uses: appleboy/scp-action@v0.1.7
-        env:
-          VITE_BACKEND_URL: "http://localhost:5000/api/"
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
