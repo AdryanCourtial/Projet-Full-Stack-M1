@@ -1,0 +1,112 @@
+.group-manager-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    margin-bottom: 1em;
+}
+
+.group-manager-header p {
+    color: var(--color-green-primary);
+}
+
+.group-manager-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+    margin-bottom: 1.5em;
+}
+
+.group-manager-section h3 {
+    font-size: 1.05rem;
+    margin: 0.5em 0 0 0;
+    color: var(--color-white-primary);
+}
+
+.group-manager-search-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    margin-bottom: 0.5em;
+}
+
+.group-manager-search-wrap label {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.group-manager-members-list,
+.group-manager-search-results {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7em;
+}
+
+.group-manager-member-card,
+.group-manager-user-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--color-white-glass-600);
+    border-radius: 10px;
+    padding: 0.8em 1em;
+    background: rgba(var(--color-black-base), 0.22);
+}
+
+.group-manager-member-card h4,
+.group-manager-user-card h4 {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.group-manager-user-card p {
+    opacity: 0.85;
+    font-size: 0.85rem;
+    margin: 0.2em 0 0 0;
+}
+
+.group-manager-add-btn,
+.group-manager-remove-btn {
+    font-weight: 700;
+    min-width: 110px;
+    padding: 0.4em 0.7em;
+}
+
+.group-manager-add-btn {
+    background-color: var(--color-green-primary);
+    color: var(--color-black-primary);
+}
+
+.group-manager-remove-btn {
+    background-color: #ff6b6b;
+    color: var(--color-white-primary);
+    border: 1px solid #ff6b6b;
+}
+
+.group-manager-add-btn:disabled,
+.group-manager-remove-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.group-manager-empty {
+    opacity: 0.8;
+    text-align: center;
+    padding: 0.8em;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .group-manager-member-card,
+    .group-manager-user-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5em;
+    }
+
+    .group-manager-add-btn,
+    .group-manager-remove-btn {
+        width: 100%;
+        min-width: 0;
+    }
+}
+

@@ -1,0 +1,146 @@
+.group-page {
+    z-index: 3;
+    display: flex;
+    gap: 2em;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    position: relative;
+    max-height: none;
+    overflow: visible;
+    padding-bottom: 2em;
+}
+
+.group-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+}
+
+.group-header p {
+    color: var(--color-green-primary);
+    opacity: 0.9;
+}
+
+.group-create-form {
+    display: flex;
+    gap: 0.8em;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.group-input-wrap {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+}
+
+.group-input-wrap label {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.group-input-wrap input {
+    width: 100%;
+}
+
+.group-create-btn {
+    background-color: var(--color-green-primary);
+    color: var(--color-black-primary);
+    font-weight: 700;
+    min-width: 170px;
+}
+
+.group-create-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.group-feedback {
+    font-size: 0.95rem;
+}
+
+.group-feedback.success {
+    color: var(--color-green-primary);
+}
+
+.group-feedback.error {
+    color: #ff6b6b;
+}
+
+.group-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8em;
+}
+
+.group-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9em 1em;
+    border: 1px solid var(--color-white-glass-600);
+    border-radius: 10px;
+    background: rgba(var(--color-black-base), 0.22);
+}
+
+.group-card h3 {
+    margin: 0;
+    font-size: 1.03rem;
+}
+
+.group-card p {
+    font-size: 0.9rem;
+    opacity: 0.88;
+}
+
+.group-card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 0.45em;
+}
+
+.group-select-btn {
+    border: 1px solid var(--color-white-glass-800);
+    background: transparent;
+    color: var(--color-white-primary);
+    padding: 0.35em 0.7em;
+    font-size: 0.86rem;
+}
+
+.group-select-btn.active {
+    background-color: rgba(var(--color-green-base), 0.22);
+    border-color: var(--color-green-primary);
+}
+
+.group-empty {
+    text-align: center;
+    opacity: 0.75;
+    padding: 0.8em;
+}
+
+@media (max-width: 768px) {
+    .group-create-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .group-create-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .group-card {
+        flex-direction: column;
+        align-items: start;
+        gap: 0.4em;
+    }
+
+    .group-card-actions {
+        width: 100%;
+        align-items: start;
+    }
+}
