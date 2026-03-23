@@ -2,13 +2,13 @@ import React, { createContext, useContext, useEffect } from "react";
 import AuthRequest from "../api/auth";
 import type { User } from "../interfaces/authentification";
 import type { LoginDto, RegisterDto } from "../interfaces/dto/auth";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 interface AuthContextType {
   auth: User | null;
   login: (userInfo: LoginDto) => Promise<boolean>;
   logout: () => void;
-  getInformationUser: () => void;
+  getInformationUser: () => Promise<void>;
   register: (data: RegisterDto) => void;
   loading: boolean;
 }
@@ -20,19 +20,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState<boolean>(true);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    const isPublicAuthRoute =
+      location.pathname === "/login" || location.pathname === "/register";
+
+    if (isPublicAuthRoute) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     AuthRequest()
       .getUserInfo()
       .then((userInfo) => {
         setAuth(userInfo);
-        console.log("useAuthContext - userInfo:", userInfo);
+        if (userInfo) {
+          console.log("useAuthContext - userInfo:", userInfo);
+        }
+      })
+      .catch(() => {
+        setAuth(null);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [location.pathname]);
 
   const login = async (userInfo: LoginDto): Promise<boolean> => {
     setLoading(true);
@@ -77,6 +91,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .getUserInfo()
       .then((userInfo) => {
         setAuth(userInfo);
+      })
+      .catch(() => {
+        setAuth(null);
       })
       .finally(() => {
         setLoading(false);

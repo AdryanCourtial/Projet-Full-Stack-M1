@@ -1,19 +1,19 @@
 import React from "react";
-import { useAuth } from "../hooks/useAuth";
 import { Navigate, Outlet } from "react-router";
+import { useAuth } from "../hooks/useAuth";
 
-const Authentificated: React.FC = () => {
+const PublicOnly: React.FC = () => {
   const { auth, loading } = useAuth();
 
   if (loading) {
     return <div>Chargement...</div>;
   }
 
-  if (auth === null) {
-    return <Navigate to="/register" replace />;
+  if (auth !== null) {
+    return <Navigate to="/home" replace />;
   }
 
   return <Outlet />;
 };
 
-export default Authentificated;
+export default PublicOnly;
