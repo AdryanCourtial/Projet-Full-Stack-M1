@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import GroupsRequest from "../../api/groups";
 import MainInteractiveContainer from "../../components/common/MainInteractiveContainer/MainInteractiveContainer";
+import TextInput from "../../components/common/inputText/TextInput";
 import type { Group as GroupItem } from "../../interfaces/dto/groups";
 import GroupMembersManager from "./GroupMembersManager";
 import "./Group.css";
@@ -94,17 +95,14 @@ function Group() {
 
       <MainInteractiveContainer>
         <form className="group-create-form" onSubmit={handleSubmit}>
-          <div className="group-input-wrap">
-            <label htmlFor="groupName">Nom du groupe</label>
-            <input
-              id="groupName"
-              type="text"
-              placeholder="Exemple: Coloc Bastille"
-              value={groupName}
-              onChange={(event) => setGroupName(event.target.value)}
-              disabled={isSubmitting}
-            />
-          </div>
+          <TextInput
+            id="groupName"
+            label="Nom du groupe"
+            placeholder="Exemple: Coloc Bastille"
+            value={groupName}
+            onChange={setGroupName}
+            disabled={isSubmitting}
+          />
 
           <button
             className="group-create-btn"
