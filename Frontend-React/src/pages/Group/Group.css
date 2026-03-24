@@ -29,21 +29,9 @@
     flex-wrap: wrap;
 }
 
-.group-input-wrap {
+.group-create-form .label-input {
     flex: 1;
     min-width: 220px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3em;
-}
-
-.group-input-wrap label {
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
-.group-input-wrap input {
-    width: 100%;
 }
 
 .group-create-btn {

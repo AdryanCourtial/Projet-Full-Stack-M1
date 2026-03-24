@@ -22,18 +22,6 @@
     color: var(--color-white-primary);
 }
 
-.group-manager-search-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3em;
-    margin-bottom: 0.5em;
-}
-
-.group-manager-search-wrap label {
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
 .group-manager-members-list,
 .group-manager-search-results {
     display: grid;

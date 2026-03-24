@@ -1,10 +1,20 @@
-// import axiosClient from "../config/axios"
+import axiosClient from "../config/axios";
+import type {
+  Category,
+  ListCategoriesResponse,
+} from "../interfaces/dto/categories";
 
-// export default function CategoriesRequest() {
+export default function CategoriesRequest() {
+  const list = async (): Promise<Category[]> => {
+    const response =
+      await axiosClient.get<ListCategoriesResponse>("categories");
 
-//     const getCategories = async () => {
+    return Array.isArray(response.data?.categories)
+      ? response.data.categories
+      : [];
+  };
 
-        
-//         const response = await axiosClient.get("categories")
-//     }
-// }
+  return {
+    list,
+  };
+}

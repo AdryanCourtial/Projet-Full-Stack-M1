@@ -10,12 +10,13 @@ import Authentificated from "./layout/Authentificated";
 import Group from "./pages/Group/Group";
 import PublicOnly from "./layout/PublicOnly";
 import PrivateShell from "./layout/PrivateShell";
+import Budget from "./pages/Budget/Budget";
 
 function App() {
   return (
     <>
       <ToastContainer aria-label={"toast container"} />
-      <MainBackground>
+      <MainBackground>  
         <Routes>
           <Route path="/" element={<Navigate to="/register" replace />} />
 
@@ -30,6 +31,7 @@ function App() {
               <Route path="/settings" element={<Schedule />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/groupe" element={<Group />} />
+              <Route path="/budget" element={<Budget />} />
             </Route>
           </Route>
 

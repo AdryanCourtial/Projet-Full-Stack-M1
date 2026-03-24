@@ -1,11 +1,56 @@
 .label-input {
     display: flex;
-    gap: .2em;
+    gap: 0.3em;
     flex-direction: column;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
-input {
+.label-input input {
     font-weight: 400;
-    padding: .7em;
+    font-size: 1rem;
+    padding: 0.7em;
+    width: 100%;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+/* Dark theme (default) */
+.label-input.dark input {
+    border: 1px solid var(--color-white-glass-600);
+    background-color: var(--color-white-glass-100);
+    color: var(--color-white-primary);
+}
+
+.label-input.dark input::placeholder {
+    color: var(--color-white-glass-600);
+}
+
+.label-input.dark input:focus {
+    outline: none;
+    border-color: var(--color-green-primary);
+    background-color: var(--color-white-glass-200);
+}
+
+/* Light theme */
+.label-input.light input {
+    border: 1px solid #d0d0d0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.label-input.light input::placeholder {
+    color: #999;
+}
+
+.label-input.light input:focus {
+    outline: none;
+    border-color: var(--color-green-primary);
+    background-color: #ffffff;
+}
+
+.label-input input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }

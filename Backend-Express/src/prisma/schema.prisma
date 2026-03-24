@@ -40,14 +40,13 @@ model User {
 /////////////////////////////////////////////////////////
 
 model Category {
-  id     Int             @id @default(autoincrement())
+  id     Int    @id @default(autoincrement())
   userId Int?
-  user   User?            @relation(fields: [userId], references: [id])
+  user   User?  @relation(fields: [userId], references: [id])
   name   String
-  type   TransactionType
 
-  createdAt        DateTime?         @default(now())
-  updatedAt        DateTime?         @updatedAt
+  createdAt        DateTime?        @default(now())
+  updatedAt        DateTime?        @updatedAt
   transactions     Transaction[]
   budgetCategories BudgetCategory[]
   schedules        Schedule[]
@@ -128,11 +127,11 @@ model BudgetCategory {
 //////////////////////////////////////////////////////////
 
 model Group {
-  id           Int           @id @default(autoincrement())
-  name         String
-  ownerId      Int
-  owner        User          @relation(fields: [ownerId], references: [id])
-  members      GroupMember[]
+  id      Int           @id @default(autoincrement())
+  name    String
+  ownerId Int
+  owner   User          @relation(fields: [ownerId], references: [id])
+  members GroupMember[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -30,20 +30,22 @@ function Login() {
             <TextInput
               id="email"
               label="Email"
-              placeholder="Entrer une adresse email"
+              placeholder="exemple@mail.com"
               value={form.email}
               onChange={(value) => setForm({ ...form, email: value as string })}
+              dark={false}
             />
 
             <TextInput
               id="password"
               label="Mot de passe"
-              placeholder="Entrer un mot de passe"
+              placeholder="••••••••"
               value={form.password}
               password
               onChange={(value) =>
                 setForm({ ...form, password: value as string })
               }
+              dark={false}
             />
 
             <button className="display-none" type="submit"></button>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import GroupsRequest from "../../api/groups";
 import UsersRequest from "../../api/users";
 import MainInteractiveContainer from "../../components/common/MainInteractiveContainer/MainInteractiveContainer";
+import TextInput from "../../components/common/inputText/TextInput";
 import type { Group } from "../../interfaces/dto/groups";
 import type { UserListItem } from "../../interfaces/dto/users";
 import "./GroupMembersManager.css";
@@ -235,19 +236,14 @@ function GroupMembersManager({ groupId, onGroupUpdated }: Props) {
           <div className="group-manager-section">
             <h3>Ajouter un membre</h3>
 
-            <div className="group-manager-search-wrap">
-              <label htmlFor="group-member-search">
-                Rechercher par nom ou email
-              </label>
-              <input
-                id="group-member-search"
-                type="text"
-                placeholder="Taper pour rechercher..."
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                disabled={isLoadingUsers || isLoadingGroup}
-              />
-            </div>
+            <TextInput
+              id="group-member-search"
+              label="Rechercher par nom ou email"
+              placeholder="Taper pour rechercher..."
+              value={search}
+              onChange={setSearch}
+              disabled={isLoadingUsers || isLoadingGroup}
+            />
 
             {feedback && (
               <p
