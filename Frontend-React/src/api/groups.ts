@@ -1,5 +1,12 @@
 import axiosClient from "../config/axios";
 import type {
+  CreateGroupExpenseDto,
+  CreateGroupExpenseResponse,
+  GroupBalancesResponse,
+  GroupSettlementsResponse,
+  ListGroupExpensesResponse,
+} from "../interfaces/dto/group-expenses";
+import type {
   AddGroupMemberDto,
   CreateGroupDto,
   CreateGroupResponse,
@@ -51,11 +58,47 @@ export default function GroupsRequest() {
     await axiosClient.delete(`groups/${groupId}/members/${userId}`);
   };
 
+  const createExpense = async (
+    groupId: number,
+    data: CreateGroupExpenseDto,
+  ) => {
+    const response = await axiosClient.post<CreateGroupExpenseResponse>(
+      `groups/${groupId}/expenses`,
+      data,
+    );
+    return response.data.expense;
+  };
+
+  const listExpenses = async (groupId: number) => {
+    const response = await axiosClient.get<ListGroupExpensesResponse>(
+      `groups/${groupId}/expenses`,
+    );
+    return Array.isArray(response.data?.expenses) ? response.data.expenses : [];
+  };
+
+  const getBalances = async (groupId: number) => {
+    const response = await axiosClient.get<GroupBalancesResponse>(
+      `groups/${groupId}/balances`,
+    );
+    return response.data;
+  };
+
+  const getSettlements = async (groupId: number) => {
+    const response = await axiosClient.get<GroupSettlementsResponse>(
+      `groups/${groupId}/settlements`,
+    );
+    return response.data;
+  };
+
   return {
     list,
     create,
     getById,
     addMember,
     removeMember,
+    createExpense,
+    listExpenses,
+    getBalances,
+    getSettlements,
   };
 }

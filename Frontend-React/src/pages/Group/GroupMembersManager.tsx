@@ -5,6 +5,7 @@ import MainInteractiveContainer from "../../components/common/MainInteractiveCon
 import TextInput from "../../components/common/inputText/TextInput";
 import type { Group } from "../../interfaces/dto/groups";
 import type { UserListItem } from "../../interfaces/dto/users";
+import GroupExpenseManager from "./expense/GroupExpenseManager";
 import "./GroupMembersManager.css";
 
 interface Props {
@@ -302,6 +303,13 @@ function GroupMembersManager({ groupId, onGroupUpdated }: Props) {
               </p>
             )}
           </div>
+
+          {group && (
+            <div className="group-manager-section">
+              <h3>Repartition des depenses (style Tricount)</h3>
+              <GroupExpenseManager group={group} users={users} />
+            </div>
+          )}
         </>
       )}
     </MainInteractiveContainer>

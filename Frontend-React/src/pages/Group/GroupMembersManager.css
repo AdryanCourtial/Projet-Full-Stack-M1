@@ -83,6 +83,104 @@
     font-size: 0.95rem;
 }
 
+.group-expense-manager {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1em;
+}
+
+.group-expense-section {
+    border: 1px solid var(--color-white-glass-600);
+    border-radius: 10px;
+    padding: 0.85em;
+    background: rgba(var(--color-black-base), 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+}
+
+.group-expense-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 0.8em;
+}
+
+.group-expense-participants {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.group-expense-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.group-expense-chip {
+    background: transparent;
+    border: 1px solid var(--color-white-glass-700);
+    color: var(--color-white-primary);
+    padding: 0.35em 0.7em;
+    font-size: 0.85rem;
+}
+
+.group-expense-chip.active {
+    border-color: var(--color-green-primary);
+    background: rgba(var(--color-green-base), 0.2);
+}
+
+.group-expense-submit-btn {
+    background-color: var(--color-green-primary);
+    color: var(--color-black-primary);
+    font-weight: 700;
+    align-self: flex-start;
+}
+
+.group-expense-submit-btn:disabled,
+.group-expense-chip:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.group-expense-list,
+.group-balance-list,
+.group-settlement-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.6em;
+}
+
+.group-expense-card,
+.group-balance-card,
+.group-settlement-card {
+    border: 1px solid var(--color-white-glass-600);
+    border-radius: 10px;
+    padding: 0.8em;
+    background: rgba(var(--color-black-base), 0.22);
+}
+
+.group-expense-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8em;
+}
+
+.group-expense-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2em;
+}
+
+.group-balance-card .positive {
+    color: var(--color-green-primary);
+}
+
+.group-balance-card .negative {
+    color: #ff6b6b;
+}
+
 @media (max-width: 768px) {
     .group-manager-member-card,
     .group-manager-user-card {
@@ -95,6 +193,22 @@
     .group-manager-remove-btn {
         width: 100%;
         min-width: 0;
+    }
+
+    .group-expense-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .group-expense-submit-btn {
+        width: 100%;
+    }
+
+    .group-expense-card {
+        flex-direction: column;
+    }
+
+    .group-expense-card-right {
+        align-items: flex-start;
     }
 }
 

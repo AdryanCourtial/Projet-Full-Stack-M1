@@ -26,13 +26,15 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  categories   Category[]
-  transactions Transaction[]
-  budgets      Budget[]
-  groups       Group[]
-  groupMembers GroupMember[]
-  envelopes    Envelope[]
-  schedules    Schedule[]
+  categories         Category[]
+  transactions       Transaction[]
+  budgets            Budget[]
+  groups             Group[]
+  groupMembers       GroupMember[]
+  groupExpensesPaid  GroupExpense[]      @relation("GroupExpensePayer")
+  groupExpenseShares GroupExpenseShare[] @relation("GroupExpenseShareUser")
+  envelopes          Envelope[]
+  schedules          Schedule[]
 }
 
 /////////////////////////////////////////////////////////
@@ -133,9 +135,10 @@ model Group {
   owner   User          @relation(fields: [ownerId], references: [id])
   members GroupMember[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
   budgets   Budget[]
+  expenses  GroupExpense[]
 }
 
 model GroupMember {
@@ -144,6 +147,35 @@ model GroupMember {
   userId  Int
   group   Group @relation(fields: [groupId], references: [id])
   user    User  @relation(fields: [userId], references: [id])
+}
+
+model GroupExpense {
+  id           Int      @id @default(autoincrement())
+  groupId      Int
+  group        Group    @relation(fields: [groupId], references: [id])
+  paidByUserId Int
+  paidBy       User     @relation("GroupExpensePayer", fields: [paidByUserId], references: [id])
+  amount       Float
+  description  String?
+  date         DateTime
+
+  shares    GroupExpenseShare[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model GroupExpenseShare {
+  id             Int          @id @default(autoincrement())
+  groupExpenseId Int
+  groupExpense   GroupExpense @relation(fields: [groupExpenseId], references: [id])
+  userId         Int
+  user           User         @relation("GroupExpenseShareUser", fields: [userId], references: [id])
+  amountOwed     Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([groupExpenseId, userId])
 }
 
 //////////////////////////////////////////////////////////
