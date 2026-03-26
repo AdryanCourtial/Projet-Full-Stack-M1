@@ -5,7 +5,6 @@ import TextInput from "../../components/common/inputText/TextInput";
 import type { Group as GroupItem } from "../../interfaces/dto/groups";
 import GroupMembersManager from "./GroupMembersManager";
 import "./Group.css";
-import TextInput from "../../components/common/inputText/TextInput";
 import Feedback, { type Feeback } from "../../components/common/Feedback/Feedback";
 
 function Group() {
