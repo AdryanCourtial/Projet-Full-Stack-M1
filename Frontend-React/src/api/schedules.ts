@@ -14,7 +14,7 @@ export default function SchedulesRequest() {
 
     }
 
-    const postSchedule = async (data: PostScheduleDto): Promise<Schedule[]> => {
+    const postSchedule = async (data: PostScheduleDto): Promise<Schedule> => {
 
         const response = await axiosClient.post("schedules", data)
 

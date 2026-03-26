@@ -19,7 +19,7 @@ class ScheduleController {
 
             const schedule = await createScheduleService(userId, dto);
             await runMonthlySchedules()
-            return res.status(201).json({ schedule });
+            return res.status(201).json(schedule);
         } catch (err: any) {
             const status = err?.statusCode ?? 500;
             if (status !== 500) return res.status(status).json({ error: err.message });

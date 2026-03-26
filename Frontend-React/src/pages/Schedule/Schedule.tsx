@@ -19,10 +19,7 @@ function Schedule() {
     const closePopup = () => setIsPopupOpen(false)
 
     useEffect(() => {
-      TransationRequest().getTransactionSchedule().then((data) => {
-        setTransaction(data)
-        console.log("Schedules : ", data)
-      })
+      fetchScheduleTransac()
     }, [])
 
     const toggleCheckbox = (value: boolean, transaction: Transaction) => {
@@ -41,6 +38,16 @@ function Schedule() {
         });
         console.log(transactions)
       }) 
+    }
+
+    const addSchedule = () => {
+      fetchScheduleTransac()
+    }
+    
+    const fetchScheduleTransac = () => {
+      TransationRequest().getTransactionSchedule().then((data) => {
+        setTransaction(data)
+      })
     }
 
 
@@ -94,7 +101,7 @@ function Schedule() {
 
         <Popup isOpen={isPopupOpen} onClose={closePopup}>
 
-          <SchedulePopup />
+          <SchedulePopup closePopup={closePopup} addSchedule={addSchedule}  />
 
         </Popup>
       </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './SchedulePopup.css'
 import { ScheduleFrequency, type PostScheduleDto, type Schedule } from '../../../interfaces/dto/schedules'
 import TextInput from '../../../components/common/inputText/TextInput'
@@ -11,7 +11,12 @@ import BudgetsRequest from '../../../api/budget'
 import SchedulesRequest from '../../../api/schedules'
 import { formatDateToMMDDYYYY } from '../../../utils/utils'
 
-const SchedulePopup = () => {
+interface Props {
+    closePopup: () => void,
+    addSchedule: (schedule: Schedule) => void
+}
+
+const SchedulePopup: React.FC<Props> = ({ closePopup, addSchedule }) => {
 
     const [categories, setCategories] = useState<Category[]>([])
     const [budget, setBudget] = useState<Budget[]>([])
@@ -52,7 +57,8 @@ const SchedulePopup = () => {
 
     const sendForm = () => {
         SchedulesRequest().postSchedule(form).then((data) => {
-            
+            closePopup()
+            addSchedule(data)
         })
     }
 
