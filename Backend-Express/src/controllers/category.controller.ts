@@ -37,7 +37,7 @@ class CategoryController {
       const userId = ((req as any).userId as number) ?? undefined;
 
       const categories = await getAllCategoriesService(userId);
-      return res.status(200).json({ categories });
+      return res.status(200).json(categories);
     } catch {
       return res.status(500).json({ error: "Internal Server Error" });
     }

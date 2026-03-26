@@ -1,0 +1,11 @@
+input[type="checkbox"]{
+    height: 100%;
+    aspect-ratio: 1;
+    max-height: 5px;
+    max-width: 5px;
+    transition: .5s ease-in-out;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--color-green-primary);
+}

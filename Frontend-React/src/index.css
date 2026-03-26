@@ -89,15 +89,6 @@ button {
   transition: border-color 0.25s;
 }
 
-input[type='text'], input[type='password'] {
-  all: unset;
-
-  background-color: transparent;
-  border-radius: .3em;
-  padding: .5em .2em;
-  border: solid 1px var(--color-gray-primary);
-}
-
 button:hover {
   border-color: var(--color-green-primary);
 }
@@ -105,6 +96,11 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .bg-glass-400 {

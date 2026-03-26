@@ -1,0 +1,11 @@
+.group-feedback {
+    font-size: 0.95rem;
+}
+
+.group-feedback.success {
+    color: var(--color-green-primary);
+}
+
+.group-feedback.error {
+    color: #ff6b6b;
+}

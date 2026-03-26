@@ -4,6 +4,8 @@ import {
   UpdateTransactionDto,
 } from "../dto/transaction.dto";
 import prisma from "../prisma/client";
+import { TransactionType } from "@prisma/client";
+import { getCurrentMonthRange, isInCurrentMonth } from "../utils/utils";
 
 export const createTransactionService = async (
   userId: number,
@@ -151,6 +153,35 @@ export const listTransactionsService = async (
   ]);
 
   return { items, page, pageSize, total };
+};
+
+export const listTransactionsSchedulesService = async (userId: number) => {
+    const { startOfMonth, startOfNextMonth } = getCurrentMonthRange()
+
+    const item = await prisma.transaction.findMany({
+        where: {
+            AND: [
+                {
+                    scheduleId: {
+                        not: null
+                    }
+                },
+                {
+                    date: {
+                        gte: startOfMonth,
+                        lt: startOfNextMonth,
+                    }
+                },
+                {
+                    userId
+                }
+            ]
+        },
+        orderBy: [{ date: "desc" }, { id: "desc" }],
+        include: { category: true, schedule: true },
+    })
+
+    return item;
 };
 
 export const updateTransactionService = async (

@@ -5,6 +5,7 @@ import {
   RunScheduleQueryDto,
   UpdateScheduleDto,
 } from "../dto/schedule.dto";
+import { getCurrentMonthInfo } from "../utils/utils";
 
 const toUTCDateOnly = (d: Date) =>
   new Date(
@@ -203,15 +204,15 @@ export const createScheduleService = async (
   const freq = dto.frequency ?? ScheduleFrequency.MONTHLY;
   const interval = dto.customInterval ?? 1;
 
-  const category = await prisma.category.findFirst({
-    where: { id: dto.categoryId, userId },
-    select: { id: true },
-  });
-  if (!category) {
-    const err: any = new Error("Category not found");
-    err.statusCode = 404;
-    throw err;
-  }
+    const category = await prisma.category.findFirst({
+        where: { id: dto.categoryId },
+    });
+
+    if (!category) {
+        const err: any = new Error("Category not found");
+        err.statusCode = 404;
+        throw err;
+    }
 
   if (dto.budgetId) {
     const budget = await prisma.budget.findFirst({

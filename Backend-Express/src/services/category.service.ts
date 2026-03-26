@@ -1,3 +1,4 @@
+import { TransactionType } from "@prisma/client";
 import prisma from "../prisma/client";
 
 export type CreateCategoryInput = {
@@ -18,13 +19,21 @@ export const createCategoryService = (
   });
 };
 
-export const getAllCategoriesService = (userId?: number) => {
-  return prisma.category.findMany({
-    where: {
-      userId,
-    },
-    orderBy: { name: "asc" },
-  });
+export const getAllCategoriesService = (userId?: number, type?: TransactionType) => {
+    return prisma.category.findMany({
+        where: {
+            OR: [
+                {
+                    userId,
+                },
+                {
+                    userId: null
+                }
+            ],
+            ...(type ? { type } : {}),
+        },
+        orderBy: { name: "asc" },
+    });
 };
 
 export const getCategoryByIdService = (userId: number, id: number) => {

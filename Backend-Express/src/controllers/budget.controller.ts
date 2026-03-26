@@ -36,7 +36,7 @@ class BudgetController {
         try {
             const userId = (req as any).userId as number;
             const budgets = await listBudgetsService(userId);
-            return res.status(200).json({ budgets });
+            return res.status(200).json(budgets);
         } catch {
             return res.status(500).json({ error: "Internal Server Error" });
         }
