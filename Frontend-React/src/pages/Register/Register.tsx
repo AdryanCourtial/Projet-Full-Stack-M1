@@ -3,10 +3,11 @@ import TextInput from "../../components/common/inputText/TextInput";
 import "./Register.css";
 import type { RegisterDto } from "../../interfaces/dto/auth";
 import { useAuth } from "../../hooks/useAuth";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 function Register() {
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState<RegisterDto>({
     email: "",
@@ -17,9 +18,13 @@ function Register() {
     username: "",
   });
 
-  const sendForm = () => {
-    console.log(form);
-    register(form);
+  const sendForm = async () => {
+    try {
+      await register(form);
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
