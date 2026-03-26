@@ -259,62 +259,14 @@ npm run lint
 npm run preview
 ```
 
-### Docker Compose
-
-```bash
-# Démarrer tous les services
-docker-compose up
-
-# Démarrer en arrière-plan
-docker-compose up -d
-
-# Arrêter tous les services
-docker-compose down
-
-# Arrêter et supprimer volumes (réinitialiser BD)
-docker-compose down -v
-
-# Voir les logs en temps réel
-docker-compose logs -f
-
-# Logs d'un service spécifique
-docker-compose logs -f backend
-docker-compose logs -f frontend
-docker-compose logs -f mysql
-
-# Rebuild des images
-docker-compose up --build
-
-# Exécuter une commande dans un conteneur
-docker-compose exec backend npm run build
-docker-compose exec mysql mysql -u root -ppassword full_stack_dev
-```
-
----
-
 ## 📡 API Documentation
 
 ### Accéder à Swagger UI
 ```
-http://localhost:5000/api-docs
+http://localhost:5000/swagger
 ```
 
 Toutes les routes API sont documentées avec des exemples de requête/réponse.
-
-### Endpoints Principaux
-
-```
-GET    /api-docs              # Documentation Swagger
-GET    /health                # Health check
-POST   /auth/register         # Créer un compte
-POST   /auth/login            # Se connecter
-POST   /auth/refresh           # Refresh token
-POST   /auth/logout            # Se déconnecter
-```
-
-*(Complétez avec vos endpoints réels)*
-
----
 
 ## 🔄 Workflow Développement
 
