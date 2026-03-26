@@ -1,6 +1,7 @@
 import { CreateTransactionDto, ListTransactionsQueryDto, UpdateTransactionDto } from "../dto/transaction.dto";
 import prisma from "../prisma/client";
 import { TransactionType } from "@prisma/client";
+import { getCurrentMonthRange, isInCurrentMonth } from "../utils/utils";
 
 export const createTransactionService = async (userId: number, dto: CreateTransactionDto) => {
     // 1) Category ownership + type match
@@ -150,11 +151,41 @@ export const listTransactionsService = async (userId: number, q: ListTransaction
     return { items, page, pageSize, total };
 };
 
+export const listTransactionsSchedulesService = async (userId: number) => {
+    const { startOfMonth, startOfNextMonth } = getCurrentMonthRange()
+
+    const item = await prisma.transaction.findMany({
+        where: {
+            AND: [
+                {
+                    scheduleId: {
+                        not: null
+                    }
+                },
+                {
+                    date: {
+                        gte: startOfMonth,
+                        lt: startOfNextMonth,
+                    }
+                },
+                {
+                    userId
+                }
+            ]
+        },
+        orderBy: [{ date: "desc" }, { id: "desc" }],
+        include: { category: true, schedule: true },
+    })
+
+    return item;
+};
+
 export const updateTransactionService = async (userId: number, id: number, dto: UpdateTransactionDto) => {
     const existing = await prisma.transaction.findFirst({
         where: { id, userId },
         select: { id: true, type: true, categoryId: true },
     });
+    
     if (!existing) {
         const err: any = new Error("Transaction not found");
         err.statusCode = 404;

@@ -1,11 +1,8 @@
-.label-input {
-    display: flex;
-    gap: .2em;
-    flex-direction: column;
-    font-weight: 600;
-}
-
 input {
-    font-weight: 400;
-    padding: .7em;
+  all: unset;
+
+  background-color: transparent;
+  border-radius: .3em;
+  padding: .5em .2em;
+  border: solid 1px var(--color-gray-primary);
 }

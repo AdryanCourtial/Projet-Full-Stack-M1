@@ -119,6 +119,36 @@ class TransactionRouter extends BaseRouter {
                 ],
                 handler: TransactionController.list
             },
+            
+            /**
+             * @openapi
+             * /transactions/schedules:
+             *   get:
+             *     security:
+             *       - bearerAuth: []
+             *     tags:
+             *       - Transaction
+             *     summary: Récupérer les schedules du mois actuel
+             *     parameters:
+             *       - in: path
+             *         name: id
+             *         required: true
+             *         schema:
+             *           type: integer
+             *     responses:
+             *       200:
+             *         description: Récuperer
+             *       401:
+             *         description: Non authentifie
+             */
+            {
+                method: 'get',
+                path: '/schedules',
+                middlewares: [
+                    AuthMiddleware.authenticateUser
+                ],
+                handler: TransactionController.listSchedule
+            },
             /**
              * @openapi
              * /transactions:
@@ -244,7 +274,7 @@ class TransactionRouter extends BaseRouter {
                     AuthMiddleware.authenticateUser
                 ],
                 handler: TransactionController.remove
-            }
+            },
         ]
     }
 }

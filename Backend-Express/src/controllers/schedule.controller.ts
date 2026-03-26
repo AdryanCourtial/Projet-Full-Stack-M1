@@ -28,7 +28,7 @@ class ScheduleController {
         try {
             const userId = (req as any).userId as number;
             const schedules = await listSchedulesService(userId);
-            return res.status(200).json({ schedules });
+            return res.status(200).json(schedules);
         } catch {
             return res.status(500).json({ error: "Internal Server Error" });
         }

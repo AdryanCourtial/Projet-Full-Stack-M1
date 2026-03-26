@@ -4,6 +4,8 @@ import MainInteractiveContainer from "../../components/common/MainInteractiveCon
 import type { Group as GroupItem } from "../../interfaces/dto/groups";
 import GroupMembersManager from "./GroupMembersManager";
 import "./Group.css";
+import TextInput from "../../components/common/inputText/TextInput";
+import Feedback, { type Feeback } from "../../components/common/Feedback/Feedback";
 
 function Group() {
   const [groups, setGroups] = useState<GroupItem[]>([]);
@@ -11,11 +13,8 @@ function Group() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
-
+  const [feedbackGroup, setFeedbackGroup] = useState<Feeback>();
+  
   const fetchGroups = async () => {
     setIsLoading(true);
 
@@ -23,7 +22,7 @@ function Group() {
       const data = await GroupsRequest().list();
       setGroups(data);
     } catch {
-      setFeedback({
+      setFeedbackGroup({
         type: "error",
         text: "Impossible de charger vos groupes pour le moment.",
       });
@@ -40,7 +39,7 @@ function Group() {
     const trimmedName = groupName.trim();
 
     if (!trimmedName) {
-      setFeedback({ type: "error", text: "Le nom du groupe est obligatoire." });
+      setFeedbackGroup({ type: "error", text: "Le nom du groupe est obligatoire." });
       return;
     }
 
@@ -51,9 +50,9 @@ function Group() {
 
       setGroups((previousGroups) => [createdGroup, ...previousGroups]);
       setGroupName("");
-      setFeedback({ type: "success", text: "Groupe cree avec succes." });
+      setFeedbackGroup({ type: "success", text: "Groupe cree avec succes." });
     } catch {
-      setFeedback({
+      setFeedbackGroup({
         type: "error",
         text: "La creation du groupe a echoue. Reessayez dans un instant.",
       });
@@ -95,14 +94,12 @@ function Group() {
       <MainInteractiveContainer>
         <form className="group-create-form" onSubmit={handleSubmit}>
           <div className="group-input-wrap">
-            <label htmlFor="groupName">Nom du groupe</label>
-            <input
+            <TextInput 
               id="groupName"
-              type="text"
+              label="Nom du groupe" 
               placeholder="Exemple: Coloc Bastille"
+              onChange={(e) => setGroupName(e as string)}
               value={groupName}
-              onChange={(event) => setGroupName(event.target.value)}
-              disabled={isSubmitting}
             />
           </div>
 
@@ -115,15 +112,8 @@ function Group() {
           </button>
         </form>
 
-        {feedback && (
-          <p
-            className={`group-feedback ${feedback.type}`}
-            role="status"
-            aria-live="polite"
-          >
-            {feedback.text}
-          </p>
-        )}
+        <Feedback feedBack={feedbackGroup} />
+
       </MainInteractiveContainer>
 
       <MainInteractiveContainer>

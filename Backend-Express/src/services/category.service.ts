@@ -21,7 +21,14 @@ export const createCategoryService = (userId: number, data: CreateCategoryInput)
 export const getAllCategoriesService = (userId?: number, type?: TransactionType) => {
     return prisma.category.findMany({
         where: {
-            userId,
+            OR: [
+                {
+                    userId,
+                },
+                {
+                    userId: null
+                }
+            ],
             ...(type ? { type } : {}),
         },
         orderBy: { name: "asc" },

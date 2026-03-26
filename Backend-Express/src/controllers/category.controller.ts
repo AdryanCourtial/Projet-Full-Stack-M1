@@ -44,7 +44,7 @@ class CategoryController {
             }
 
             const categories = await getAllCategoriesService(userId, parsedType);
-            return res.status(200).json({ categories });
+            return res.status(200).json(categories);
         } catch {
             return res.status(500).json({ error: "Internal Server Error" });
         }

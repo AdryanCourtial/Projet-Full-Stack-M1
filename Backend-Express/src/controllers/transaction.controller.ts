@@ -5,6 +5,7 @@ import {
     getTransactionByIdService,
     listTransactionsService,
     updateTransactionService,
+    listTransactionsSchedulesService
 } from "../services/transaction.service";
 import { CreateTransactionDto, ListTransactionsQueryDto, UpdateTransactionDto } from "../dto/transaction.dto";
 
@@ -30,6 +31,18 @@ class TransactionController {
             const userId = (req as any).userId as number;
             const dto = (req as any).validated_query as ListTransactionsQueryDto;
             const result = await listTransactionsService(userId, dto);
+
+            return res.status(200).json(result);
+        } catch (err: any) {
+            console.log(err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    };
+
+    static listSchedule = async (req: Request, res: Response) => {
+        try {
+            const userId = (req as any).userId as number;
+            const result = await listTransactionsSchedulesService(userId);
 
             return res.status(200).json(result);
         } catch (err: any) {

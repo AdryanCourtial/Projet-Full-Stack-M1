@@ -1,6 +1,7 @@
 import prisma from "../prisma/client";
 import { Prisma, ScheduleFrequency, TransactionType } from "@prisma/client";
 import { CreateScheduleDto, RunScheduleQueryDto, UpdateScheduleDto } from "../dto/schedule.dto";
+import { getCurrentMonthInfo } from "../utils/utils";
 
 const toUTCDateOnly = (d: Date) =>
     new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0, 0));
@@ -149,14 +150,16 @@ export const createScheduleService = async (userId: number, dto: CreateScheduleD
     const interval = dto.customInterval ?? 1;
 
     const category = await prisma.category.findFirst({
-        where: { id: dto.categoryId, userId },
+        where: { id: dto.categoryId },
         select: { id: true, type: true },
     });
+
     if (!category) {
         const err: any = new Error("Category not found");
         err.statusCode = 404;
         throw err;
     }
+
     if (category.type !== dto.type) {
         const err: any = new Error("Schedule type must match category type");
         err.statusCode = 400;
@@ -172,7 +175,7 @@ export const createScheduleService = async (userId: number, dto: CreateScheduleD
         }
     }
 
-    return prisma.schedule.create({
+    const schedule = await prisma.schedule.create({
         data: {
             userId,
             name: dto.name.trim(),
@@ -188,6 +191,29 @@ export const createScheduleService = async (userId: number, dto: CreateScheduleD
         },
         include: { category: true, budget: true },
     });
+
+    // const { start, end } = getCurrentMonthInfo()
+
+    // const isThisCurrentMonth = schedule.startDate >= start && schedule.startDate <= end;
+
+    // console.log("Les dates de ce mois ci sont", start, end)
+    // console.log("Test du mois actuel", isThisCurrentMonth)
+
+    // if (isThisCurrentMonth) {
+    //     await prisma.transaction.create({
+    //         data: {
+    //             amount: schedule.amount,
+    //             date: schedule.startDate,
+    //             type: "EXPENSE",
+    //             scheduleId: schedule.id,
+    //             categoryId: schedule.categoryId,
+    //             userId
+    //         },
+    //     })
+    // }
+
+
+    return schedule
 };
 
 export const listSchedulesService = (userId: number) => {

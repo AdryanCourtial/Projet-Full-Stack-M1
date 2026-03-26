@@ -48,7 +48,7 @@ function Register() {
 
             <TextInput
               id='email' 
-              label='Email' 
+              label='Email'
               placeholder='Entrer une adresse email'
               value={form.email}
               onChange={(value) => setForm({ ...form, email: value as string })}

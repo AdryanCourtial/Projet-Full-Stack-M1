@@ -10,7 +10,7 @@ const Authentificated: React.FC = () => {
   }
 
   if (auth === null) {
-    return <Navigate to="/register" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;
