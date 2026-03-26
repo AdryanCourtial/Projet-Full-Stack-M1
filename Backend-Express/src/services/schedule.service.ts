@@ -203,15 +203,15 @@ export const createScheduleService = async (
   const freq = dto.frequency ?? ScheduleFrequency.MONTHLY;
   const interval = dto.customInterval ?? 1;
 
-    const category = await prisma.category.findFirst({
-        where: { id: dto.categoryId },
-    });
+  const category = await prisma.category.findFirst({
+    where: { id: dto.categoryId },
+  });
 
-    if (!category) {
-        const err: any = new Error("Category not found");
-        err.statusCode = 404;
-        throw err;
-    }
+  if (!category) {
+    const err: any = new Error("Category not found");
+    err.statusCode = 404;
+    throw err;
+  }
 
   if (dto.budgetId) {
     const budget = await prisma.budget.findFirst({
@@ -248,12 +248,12 @@ export const listSchedulesService = (userId: number) => {
     where: {
       AND: [
         {
-          userId
+          userId,
         },
         {
-          deleted_at: null
-        }
-      ]
+          deleted_at: null,
+        },
+      ],
     },
     orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
     include: { category: true, budget: true },
@@ -356,7 +356,10 @@ export const deleteScheduleService = async (userId: number, id: number) => {
     err.statusCode = 404;
     throw err;
   }
-  return prisma.schedule.update({ where: { id }, data: { deleted_at: new Date()} });
+  return prisma.schedule.update({
+    where: { id },
+    data: { deleted_at: new Date() },
+  });
 };
 
 export const runScheduleService = async (
@@ -403,13 +406,9 @@ export const runSchedulesForCurrentMonthService = async (
 ) => {
   const month = monthBoundsUTC(referenceDate);
 
-  console.log("LES DATES DE", month)
-
   const schedules = await prisma.schedule.findMany({
     where: {
-      deleted_at: {
-        not: null
-      },
+      deleted_at: null,
       startDate: { lte: month.to },
       OR: [{ endDate: null }, { endDate: { gte: month.from } }],
     },
@@ -429,8 +428,6 @@ export const runSchedulesForCurrentMonthService = async (
     },
     orderBy: [{ userId: "asc" }, { id: "asc" }],
   });
-
-  console.log("OKKKK LES SCHEDULES A RAJOUTER SONT :", schedules)
 
   const results: Array<{
     scheduleId: number;
