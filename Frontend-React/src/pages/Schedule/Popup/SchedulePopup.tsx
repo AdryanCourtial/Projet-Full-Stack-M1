@@ -51,9 +51,8 @@ const SchedulePopup = () => {
     })
 
     const sendForm = () => {
-        console.log(form);
         SchedulesRequest().postSchedule(form).then((data) => {
-            console.log(data)
+            
         })
     }
 
@@ -79,7 +78,7 @@ const SchedulePopup = () => {
         <div className='schedule-popup-container'>
           <div className='header-show-schedule'>
             <h2>{settings()}</h2>
-            <button onClick={() => changePage(page === "add" ? "show" : "add")}> (-) </button>
+            <button onClick={() => changePage(page === "add" ? "show" : "add")}> (+) </button>
           </div>
         
         {

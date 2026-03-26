@@ -2,6 +2,7 @@ import TextInput from "../../components/common/inputText/TextInput";
 import "./Login.css";
 import { useState, type FormEvent } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { Link } from "react-router";
 
 function Login() {
   const [form, setForm] = useState({
@@ -50,6 +51,9 @@ function Login() {
 
             <button className="display-none" type="submit"></button>
           </form>
+
+          <Link to={'/register'} >Vous n'avez pas de compte ?</Link>
+
 
           <button type="submit" form="login-form">
             {" "}
