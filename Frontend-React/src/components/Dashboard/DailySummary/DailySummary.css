@@ -1,0 +1,60 @@
+.daily-summary {
+  padding: 1.8em;
+  min-height: fit-content;
+}
+
+.daily-summary-title {
+  margin: 0 0 1.8em 0;
+  font-size: 1.15rem;
+  color: var(--color-white-primary);
+  font-weight: 700;
+}
+
+.daily-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.2em;
+}
+
+.daily-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1em;
+  padding: 1.6em;
+  background: rgba(var(--color-white-glass-400));
+  border: 1px solid var(--color-white-glass-600);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.daily-card:hover {
+  border-color: var(--color-green-primary);
+  background: rgba(var(--color-white-glass-600));
+}
+
+.daily-icon {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-green-primary);
+}
+
+.daily-info {
+  width: 100%;
+}
+
+.daily-label {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.75rem;
+  color: var(--color-green-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 700;
+}
+
+.daily-value {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-white-primary);
+}

@@ -1,0 +1,82 @@
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5em;
+  width: 100%;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1em;
+  padding: 2em;
+  border-radius: 12px;
+  background: rgba(var(--color-white-glass-400));
+  border: 1px solid var(--color-white-glass-600);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: var(--color-green-primary);
+  background: rgba(var(--color-white-glass-600));
+}
+
+.stat-card.income {
+  border-left: 4px solid var(--color-green-primary);
+}
+
+.stat-card.expense {
+  border-left: 4px solid rgba(var(--color-green-base), 0.5);
+}
+
+.stat-card.net.positive {
+  border-left: 4px solid var(--color-green-primary);
+  background: rgba(var(--color-green-base), 0.1);
+}
+
+.stat-card.net.negative {
+  border-left: 4px solid rgba(var(--color-green-base), 0.3);
+  background: rgba(var(--color-green-base), 0.05);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-green-primary);
+}
+
+.stat-content {
+  flex: 1;
+  width: 100%;
+}
+
+.stat-label {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.8rem;
+  color: var(--color-green-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 700;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-white-primary);
+}
+
+@media (max-width: 1200px) {
+  .summary-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+  }
+}
+
+@media (max-width: 768px) {
+  .summary-stats {
+    grid-template-columns: 1fr;
+    gap: 1em;
+  }
+}
