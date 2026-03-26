@@ -28,7 +28,7 @@ const SelecteurInput: React.FC<Props> = ({
   };
 
   return (
-    <label htmlFor={id} className={`label-input ${className ?? ""}`}>
+    <label htmlFor={id} className={`label-input-select ${className ?? ""}`}>
       <span>{label}</span>
       <select
         id={id}

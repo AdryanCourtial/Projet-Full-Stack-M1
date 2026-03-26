@@ -3,7 +3,7 @@ import { runSchedulesForCurrentMonthService } from "../services/schedule.service
 
 const MONTHLY_SCHEDULE_CRON = "5 0 1 * *";
 
-const runMonthlySchedules = async () => {
+export const runMonthlySchedules = async () => {
     try {
         const result = await runSchedulesForCurrentMonthService(new Date());
         console.log(

@@ -5,9 +5,11 @@ import {
     getScheduleByIdService,
     listSchedulesService,
     runScheduleService,
+    runSchedulesForCurrentMonthService,
     updateScheduleService,
 } from "../services/schedule.service";
 import { CreateScheduleDto, RunScheduleQueryDto, UpdateScheduleDto } from "../dto/schedule.dto";
+import { runMonthlySchedules } from "../jobs/schedule.cron";
 
 class ScheduleController {
     static create = async (req: Request, res: Response) => {
@@ -16,6 +18,7 @@ class ScheduleController {
             const dto = (req as any).validated_body as CreateScheduleDto;
 
             const schedule = await createScheduleService(userId, dto);
+            await runMonthlySchedules()
             return res.status(201).json({ schedule });
         } catch (err: any) {
             const status = err?.statusCode ?? 500;
@@ -89,6 +92,7 @@ class ScheduleController {
 
             const q = (req as any).validated_query as RunScheduleQueryDto;
             const result = await runScheduleService(userId, id, q);
+            await runSchedulesForCurrentMonthService()
 
             return res.status(200).json(result);
         } catch (err: any) {

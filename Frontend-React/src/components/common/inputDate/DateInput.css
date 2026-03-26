@@ -1,11 +1,40 @@
-.label-input {
+.label-input-date {
     display: flex;
-    gap: .2em;
     flex-direction: column;
-    font-weight: 600;
+    gap: 8px;
+    width: 100%;
 }
 
-input {
-    font-weight: 400;
-    padding: .6em;
+.label-input-date input[type="date"] {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid #d0d0d0;
+
+    background-color: var(--color-white-glass-100);
+    color: var(--color-black-primary);
+    transition: .5s ease-in-out;
+    border-radius: 8px;
+    outline: none;
+    font: inherit;
+}
+
+.label-input-date input[type="date"]:focus {
+    border: 1px solid var(--color-green-primary);
+    background-color: var(--color-white-glass-100);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-green-primary) 20%, transparent);
+}
+
+.label-input-date input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: .3s ease-in-out;
+}
+
+.label-input-date input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+.label-input-date input[type="date"]:valid {
+    border: 1px solid #d0d0d0;
 }

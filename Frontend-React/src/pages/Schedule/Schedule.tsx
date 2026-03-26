@@ -73,7 +73,7 @@ function Schedule() {
                     <tr>
                       <td>{tr.schedule?.name}</td>
                       <td>{formatDateToMMDDYYYY(tr.date)}</td>
-                      <td>{tr.amount}$</td>
+                      <td>{tr.amount}€</td>
                       <CheckboxInput 
                         id='check-schedule'
                         label=''

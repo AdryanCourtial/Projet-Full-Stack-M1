@@ -19,7 +19,7 @@ const DateInput: React.FC<Props> = ({ id, placeholder, label, className, value, 
     }
     
     return (
-        <label htmlFor={id} className={`label-input ${className ?? id}`}>
+        <label htmlFor={id} className={`label-input-date ${className ?? id}`}>
             {label}
             <input type='date' placeholder={placeholder} id={id} value={value} onChange={handleChange} />
         </label>

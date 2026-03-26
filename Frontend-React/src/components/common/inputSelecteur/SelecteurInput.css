@@ -1,11 +1,45 @@
-.label-input {
+.label-input-select {
     display: flex;
-    gap: .2em;
     flex-direction: column;
-    font-weight: 600;
+    gap: 8px;
+    width: 100%;
 }
 
-select {
-    font-weight: 400;
-    padding: .7em;
+.label-input-select select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid #d0d0d0;
+    background-color: var(--color-white-glass-100);
+    color: var(--color-black-primary);
+    transition: .5s ease-in-out;
+    border-radius: 8px;
+    outline: none;
+    font: inherit;
+
+    /* reset style natif */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    cursor: pointer;
+}
+
+.label-input-select select:focus {
+    border: 1px solid var(--color-green-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-green-primary) 20%, transparent);
+}
+
+.label-input-select {
+    position: relative;
+}
+
+.label-input-select::after {
+    content: "▾";
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    pointer-events: none;
+    color: var(--color-white-primary);
+    opacity: 0.7;
 }

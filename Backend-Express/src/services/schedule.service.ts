@@ -5,7 +5,6 @@ import {
   RunScheduleQueryDto,
   UpdateScheduleDto,
 } from "../dto/schedule.dto";
-import { getCurrentMonthInfo } from "../utils/utils";
 
 const toUTCDateOnly = (d: Date) =>
   new Date(
@@ -246,7 +245,16 @@ export const createScheduleService = async (
 
 export const listSchedulesService = (userId: number) => {
   return prisma.schedule.findMany({
-    where: { userId },
+    where: {
+      AND: [
+        {
+          userId
+        },
+        {
+          deleted_at: null
+        }
+      ]
+    },
     orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
     include: { category: true, budget: true },
   });
@@ -348,7 +356,7 @@ export const deleteScheduleService = async (userId: number, id: number) => {
     err.statusCode = 404;
     throw err;
   }
-  return prisma.schedule.delete({ where: { id } });
+  return prisma.schedule.update({ where: { id }, data: { deleted_at: new Date()} });
 };
 
 export const runScheduleService = async (
@@ -373,11 +381,13 @@ export const runScheduleService = async (
       isActive: true,
     },
   });
+
   if (!schedule) {
     const err: any = new Error("Schedule not found");
     err.statusCode = 404;
     throw err;
   }
+
   if (!schedule.isActive) {
     const err: any = new Error("Schedule is inactive");
     err.statusCode = 409;
@@ -393,9 +403,13 @@ export const runSchedulesForCurrentMonthService = async (
 ) => {
   const month = monthBoundsUTC(referenceDate);
 
+  console.log("LES DATES DE", month)
+
   const schedules = await prisma.schedule.findMany({
     where: {
-      isActive: true,
+      deleted_at: {
+        not: null
+      },
       startDate: { lte: month.to },
       OR: [{ endDate: null }, { endDate: { gte: month.from } }],
     },
@@ -415,6 +429,8 @@ export const runSchedulesForCurrentMonthService = async (
     },
     orderBy: [{ userId: "asc" }, { id: "asc" }],
   });
+
+  console.log("OKKKK LES SCHEDULES A RAJOUTER SONT :", schedules)
 
   const results: Array<{
     scheduleId: number;
